@@ -1,0 +1,19 @@
+{
+  "name": "TideLine — Fishing Competition Scorer",
+  "short_name": "TideLine",
+  "description": "Real-time mobile-first fishing competition scorer with automated 5-category leaderboards, tie-breakers, and transparent marshal audit log.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#0F172A",
+  "theme_color": "#0F172A",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

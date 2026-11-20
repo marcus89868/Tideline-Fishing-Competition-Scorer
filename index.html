@@ -1,0 +1,4121 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#0F172A">
+  <meta name="description" content="Real-time mobile-first fishing competition scorer with automated 5-category leaderboards, tie-breaker resolution, and transparent marshal audit log.">
+  <link rel="manifest" href="./manifest.webmanifest"><link rel="icon" type="image/svg+xml" href="./icon.svg"><link rel="apple-touch-icon" href="./icon.svg"><title>TideLine — Fishing Competition Scorer</title>
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      background-color: #E2E8F0;
+      color: #0F172A;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      font-size: 15px;
+      line-height: 1.45;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .app-theme {
+      --bg-canvas: #F1F5F9;
+      --bg-surface: #FFFFFF;
+      --bg-subtle: #F8FAFC;
+      --bg-muted: #E2E8F0;
+      --ink-primary: #0F172A;
+      --ink-secondary: #334155;
+      --ink-muted: #475569;
+      --border-strong: #CBD5E1;
+      --border-soft: #E2E8F0;
+      --brand: #0369A1;
+      --brand-hover: #075985;
+      --brand-deep: #0C4A6E;
+      --brand-tint: #E0F2FE;
+      --gold-bg: #FFFBEB;
+      --gold-border: #F59E0B;
+      --gold-badge: #B45309;
+      --gold-ink: #78350F;
+      --silver-bg: #F8FAFC;
+      --silver-border: #94A3B8;
+      --silver-badge: #475569;
+      --silver-ink: #1E293B;
+      --tb-bg: #E0F2FE;
+      --tb-ink: #0369A1;
+      --tb-border: #7DD3FC;
+      --danger-bg: #FEF2F2;
+      --danger-ink: #991B1B;
+      --danger-border: #FCA5A5;
+      --danger-solid: #DC2626;
+      --warn-bg: #FEF3C7;
+      --warn-ink: #92400E;
+      --warn-border: #FCD34D;
+      --ok-bg: #DCFCE7;
+      --ok-ink: #166534;
+      --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.06);
+      --shadow-md: 0 6px 20px rgba(15, 23, 42, 0.12);
+      --shadow-fab: 0 8px 24px rgba(3, 105, 161, 0.36);
+      --radius-lg: 16px;
+      --radius-md: 12px;
+      --radius-sm: 8px;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      background: #E2E8F0;
+    }
+
+    .mobile-shell {
+      width: 100%;
+      max-width: 540px;
+      min-height: 100vh;
+      background: var(--bg-canvas);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.08), 0 12px 40px rgba(15, 23, 42, 0.09);
+    }
+
+    .tabular {
+      font-variant-numeric: tabular-nums;
+    }
+
+    .mono {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* Header */
+    .app-header {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      background: #0F172A;
+      color: #FFFFFF;
+      padding: 12px 16px;
+      border-bottom: 1px solid #1E293B;
+    }
+
+    .header-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .brand-block {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+      flex: 1;
+    }
+
+    .brand-mark {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      background: #0369A1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      color: #FFFFFF;
+    }
+
+    .brand-text {
+      min-width: 0;
+    }
+
+    .app-title {
+      margin: 0;
+      font-size: 16px;
+      font-weight: 800;
+      letter-spacing: -0.015em;
+      color: #FFFFFF;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .app-subtitle {
+      font-size: 12px;
+      color: #CBD5E1;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .offline-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: #4ADE80;
+      display: inline-block;
+      flex-shrink: 0;
+    }
+
+    .header-controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    /* Sample Toggle Switch */
+    .sample-toggle-btn {
+      min-height: 44px;
+      padding: 6px 10px;
+      border-radius: 10px;
+      border: 1.5px solid #334155;
+      background: #1E293B;
+      color: #F8FAFC;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: background 0.15s ease, border-color 0.15s ease;
+    }
+
+    .sample-toggle-btn:hover {
+      background: #334155;
+    }
+
+    .sample-toggle-btn.active {
+      background: #0369A1;
+      border-color: #38BDF8;
+      color: #FFFFFF;
+    }
+
+    .toggle-track {
+      width: 30px;
+      height: 18px;
+      border-radius: 999px;
+      background: #475569;
+      position: relative;
+      transition: background 0.15s ease;
+      flex-shrink: 0;
+    }
+
+    .sample-toggle-btn.active .toggle-track {
+      background: #38BDF8;
+    }
+
+    .toggle-thumb {
+      width: 14px;
+      height: 14px;
+      border-radius: 999px;
+      background: #FFFFFF;
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      transition: transform 0.15s ease;
+    }
+
+    .sample-toggle-btn.active .toggle-thumb {
+      transform: translateX(12px);
+    }
+
+    .icon-btn {
+      min-width: 44px;
+      min-height: 44px;
+      border-radius: 10px;
+      border: 1.5px solid #334155;
+      background: #1E293B;
+      color: #F8FAFC;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background 0.15s ease;
+    }
+
+    .icon-btn:hover {
+      background: #334155;
+    }
+
+    /* Sample Banner */
+    .sample-banner {
+      background: #FEF3C7;
+      color: #78350F;
+      border-bottom: 1.5px solid #F59E0B;
+      padding: 8px 16px;
+      font-size: 12.5px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .sample-banner button {
+      background: #78350F;
+      color: #FFFFFF;
+      border: none;
+      border-radius: 6px;
+      padding: 5px 10px;
+      min-height: 32px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    /* Main Content */
+    .main-content {
+      flex: 1;
+      padding: 14px 14px 108px 14px;
+    }
+
+    /* Division Filter Bar */
+    .filter-strip {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 10px;
+      margin-bottom: 4px;
+      scrollbar-width: none;
+    }
+    .filter-strip::-webkit-scrollbar { display: none; }
+
+    .chip-btn {
+      min-height: 40px;
+      padding: 0 14px;
+      border-radius: 999px;
+      border: 1.5px solid var(--border-strong);
+      background: var(--bg-surface);
+      color: var(--ink-secondary);
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+      flex-shrink: 0;
+      transition: all 0.12s ease;
+    }
+
+    .chip-btn.active {
+      background: #0F172A;
+      border-color: #0F172A;
+      color: #FFFFFF;
+    }
+
+    /* Podium Cards */
+    .podium-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .podium-card {
+      background: var(--bg-surface);
+      border: 1.5px solid var(--border-strong);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform 0.12s ease, box-shadow 0.12s ease, border-color 0.12s ease;
+      text-align: left;
+      width: 100%;
+      padding: 0;
+      color: inherit;
+      font: inherit;
+    }
+
+    .podium-card:hover {
+      border-color: #64748B;
+      box-shadow: var(--shadow-md);
+    }
+
+    .podium-card:active {
+      transform: scale(0.992);
+    }
+
+    .podium-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border-soft);
+      background: var(--bg-subtle);
+      gap: 8px;
+    }
+
+    .podium-cat-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--ink-primary);
+      letter-spacing: -0.01em;
+    }
+
+    .cat-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      background: var(--brand-tint);
+      color: var(--brand-deep);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .podium-expand-hint {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--brand);
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      white-space: nowrap;
+    }
+
+    .podium-rows {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .podium-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 12px 14px;
+      min-height: 62px;
+    }
+
+    .podium-row + .podium-row {
+      border-top: 1px solid var(--border-soft);
+    }
+
+    .podium-row.place-1 {
+      background: var(--gold-bg);
+    }
+
+    .podium-row.place-2 {
+      background: var(--bg-surface);
+    }
+
+    .podium-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+      flex: 1;
+    }
+
+    .rank-badge {
+      min-width: 42px;
+      height: 30px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.03em;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .rank-1 {
+      background: var(--gold-badge);
+      color: #FFFFFF;
+    }
+
+    .rank-2 {
+      background: var(--silver-badge);
+      color: #FFFFFF;
+    }
+
+    .rank-other {
+      background: var(--bg-muted);
+      color: var(--ink-primary);
+    }
+
+    .podium-angler-info {
+      min-width: 0;
+      flex: 1;
+    }
+
+    .podium-name-line {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .podium-angler-name {
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--ink-primary);
+      line-height: 1.25;
+    }
+
+    .badge-tag {
+      font-size: 11.5px;
+      font-weight: 700;
+      color: var(--ink-secondary);
+      background: rgba(15, 23, 42, 0.07);
+      padding: 1px 6px;
+      border-radius: 5px;
+    }
+
+    .podium-meta {
+      font-size: 12px;
+      color: var(--ink-muted);
+      font-weight: 600;
+      margin-top: 2px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .tb-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      font-size: 11px;
+      font-weight: 800;
+      color: var(--tb-ink);
+      background: var(--tb-bg);
+      border: 1px solid var(--tb-border);
+      padding: 1px 6px;
+      border-radius: 999px;
+      white-space: nowrap;
+    }
+
+    .podium-score {
+      text-align: right;
+      flex-shrink: 0;
+    }
+
+    .score-value {
+      font-size: 20px;
+      font-weight: 900;
+      color: var(--ink-primary);
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+    }
+
+    .score-unit {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--ink-muted);
+      margin-left: 2px;
+    }
+
+    .empty-slot {
+      padding: 14px;
+      color: var(--ink-muted);
+      font-size: 13px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* Section Toolbars */
+    .toolbar-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .search-box {
+      position: relative;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .search-box svg {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--ink-muted);
+      pointer-events: none;
+    }
+
+    .input-field {
+      width: 100%;
+      min-height: 46px;
+      padding: 10px 12px;
+      border-radius: var(--radius-md);
+      border: 1.5px solid var(--border-strong);
+      background: var(--bg-surface);
+      color: var(--ink-primary);
+      font-size: 15px;
+      font-weight: 600;
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .input-field:focus {
+      border-color: var(--brand);
+      box-shadow: 0 0 0 3px rgba(3, 105, 161, 0.18);
+    }
+
+    .search-input {
+      padding-left: 38px;
+    }
+
+    .btn {
+      min-height: 46px;
+      padding: 0 16px;
+      border-radius: var(--radius-md);
+      border: 1.5px solid transparent;
+      font-size: 14px;
+      font-weight: 800;
+      font-family: inherit;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      white-space: nowrap;
+      transition: background 0.12s ease, transform 0.1s ease, border-color 0.12s ease;
+    }
+
+    .btn:active {
+      transform: scale(0.98);
+    }
+
+    .btn-primary {
+      background: var(--brand);
+      color: #FFFFFF;
+    }
+    .btn-primary:hover {
+      background: var(--brand-hover);
+    }
+
+    .btn-dark {
+      background: #0F172A;
+      color: #FFFFFF;
+    }
+    .btn-dark:hover {
+      background: #1E293B;
+    }
+
+    .btn-secondary {
+      background: var(--bg-surface);
+      border-color: var(--border-strong);
+      color: var(--ink-primary);
+    }
+    .btn-secondary:hover {
+      background: var(--bg-subtle);
+      border-color: #94A3B8;
+    }
+
+    .btn-danger {
+      background: var(--danger-solid);
+      color: #FFFFFF;
+    }
+    .btn-danger:hover {
+      background: #B91C1C;
+    }
+
+    .btn-danger-outline {
+      background: var(--danger-bg);
+      border-color: var(--danger-border);
+      color: var(--danger-ink);
+    }
+
+    .btn-sm {
+      min-height: 44px;
+      padding: 0 12px;
+      font-size: 13px;
+      border-radius: 10px;
+    }
+
+    .btn-block {
+      width: 100%;
+    }
+
+    /* Angler Cards */
+    .list-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .angler-card {
+      background: var(--bg-surface);
+      border: 1.5px solid var(--border-strong);
+      border-radius: var(--radius-lg);
+      padding: 13px 14px;
+      box-shadow: var(--shadow-sm);
+      cursor: pointer;
+      text-align: left;
+      width: 100%;
+      font: inherit;
+      color: inherit;
+      transition: border-color 0.12s ease, box-shadow 0.12s ease;
+    }
+
+    .angler-card:hover {
+      border-color: #64748B;
+      box-shadow: var(--shadow-md);
+    }
+
+    .angler-card-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .angler-name {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--ink-primary);
+    }
+
+    .div-pill {
+      display: inline-flex;
+      align-items: center;
+      font-size: 11.5px;
+      font-weight: 800;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: #E2E8F0;
+      color: #1E293B;
+    }
+
+    .div-pill.junior {
+      background: #DBEAFE;
+      color: #1E40AF;
+    }
+
+    .podium-count-pill {
+      font-size: 11.5px;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: var(--gold-bg);
+      border: 1px solid var(--gold-border);
+      color: var(--gold-ink);
+      white-space: nowrap;
+    }
+
+    .angler-stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-soft);
+      border-radius: 10px;
+      padding: 8px 10px;
+    }
+
+    .stat-cell-label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--ink-muted);
+    }
+
+    .stat-cell-val {
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--ink-primary);
+      margin-top: 1px;
+    }
+
+    /* Audit Log Cards */
+    .export-bar {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .audit-card {
+      background: var(--bg-surface);
+      border: 1.5px solid var(--border-strong);
+      border-radius: var(--radius-lg);
+      padding: 13px 14px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .audit-card.voided {
+      background: #FFF5F5;
+      border-color: var(--danger-border);
+    }
+
+    .audit-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 8px;
+      flex-wrap: wrap;
+    }
+
+    .audit-id-time {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--ink-muted);
+    }
+
+    .log-id {
+      background: #0F172A;
+      color: #FFFFFF;
+      padding: 2px 7px;
+      border-radius: 6px;
+      font-size: 11.5px;
+      font-weight: 800;
+    }
+
+    .audit-card.voided .log-id {
+      background: #991B1B;
+    }
+
+    .status-pill {
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.03em;
+      padding: 2px 8px;
+      border-radius: 999px;
+      text-transform: uppercase;
+    }
+
+    .status-active {
+      background: var(--ok-bg);
+      color: var(--ok-ink);
+    }
+
+    .status-edited {
+      background: var(--warn-bg);
+      color: var(--warn-ink);
+      border: 1px solid var(--warn-border);
+    }
+
+    .status-voided {
+      background: var(--danger-bg);
+      color: var(--danger-ink);
+      border: 1px solid var(--danger-border);
+    }
+
+    .audit-body.struck {
+      text-decoration: line-through;
+      opacity: 0.72;
+    }
+
+    .audit-angler-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .audit-angler-btn {
+      background: none;
+      border: none;
+      padding: 0;
+      font: inherit;
+      font-size: 15.5px;
+      font-weight: 800;
+      color: var(--ink-primary);
+      cursor: pointer;
+      text-align: left;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .audit-angler-btn:hover {
+      color: var(--brand);
+    }
+
+    .audit-metrics {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-soft);
+      border-radius: 10px;
+      padding: 8px 10px;
+      margin-bottom: 8px;
+    }
+
+    .audit-note {
+      font-size: 12.5px;
+      color: var(--ink-secondary);
+      font-weight: 600;
+      background: var(--bg-subtle);
+      border-radius: 8px;
+      padding: 7px 10px;
+      margin-bottom: 8px;
+      border-left: 3px solid #64748B;
+    }
+
+    .audit-trail-box {
+      margin-top: 8px;
+      padding: 8px 10px;
+      border-radius: 9px;
+      font-size: 12px;
+      background: #FEF3C7;
+      border: 1px solid #FCD34D;
+      color: #78350F;
+    }
+
+    .audit-trail-box.void-box {
+      background: #FEE2E2;
+      border-color: #FCA5A5;
+      color: #7F1D1D;
+    }
+
+    .audit-trail-item + .audit-trail-item {
+      margin-top: 6px;
+      padding-top: 6px;
+      border-top: 1px dashed rgba(120, 53, 15, 0.25);
+    }
+
+    .audit-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .audit-actions .btn {
+      flex: 1;
+    }
+
+    /* Bottom Navigation */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 540px;
+      background: #FFFFFF;
+      border-top: 1.5px solid var(--border-strong);
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      padding: 6px 8px calc(6px + env(safe-area-inset-bottom, 0px)) 8px;
+      z-index: 40;
+      box-shadow: 0 -4px 16px rgba(15, 23, 42, 0.08);
+    }
+
+    .nav-tab {
+      min-height: 54px;
+      border: none;
+      background: transparent;
+      color: var(--ink-muted);
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 800;
+      border-radius: 12px;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      transition: background 0.12s ease, color 0.12s ease;
+    }
+
+    .nav-tab.active {
+      background: var(--brand-tint);
+      color: var(--brand-deep);
+    }
+
+    /* Floating Action Button */
+    .fab-wrap {
+      position: fixed;
+      bottom: calc(78px + env(safe-area-inset-bottom, 0px));
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 540px;
+      pointer-events: none;
+      display: flex;
+      justify-content: flex-end;
+      padding: 0 16px;
+      z-index: 45;
+    }
+
+    .fab-btn {
+      pointer-events: auto;
+      min-width: 60px;
+      height: 60px;
+      padding: 0 20px;
+      border-radius: 999px;
+      border: 2px solid #FFFFFF;
+      background: var(--brand);
+      color: #FFFFFF;
+      font-family: inherit;
+      font-size: 15px;
+      font-weight: 900;
+      box-shadow: var(--shadow-fab);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: transform 0.14s ease, background 0.14s ease;
+    }
+
+    .fab-btn:hover {
+      background: var(--brand-hover);
+      transform: translateY(-2px);
+    }
+
+    .fab-btn:active {
+      transform: scale(0.95);
+    }
+
+    /* Modals & Drawers */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.62);
+      z-index: 60;
+      display: none;
+      align-items: flex-end;
+      justify-content: center;
+      padding: 0;
+    }
+
+    .modal-backdrop.open {
+      display: flex;
+    }
+
+    .sheet-panel {
+      width: 100%;
+      max-width: 540px;
+      max-height: 90vh;
+      background: var(--bg-surface);
+      border-radius: 20px 20px 0 0;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: 0 -10px 40px rgba(15, 23, 42, 0.28);
+      animation: slideUp 0.18s ease-out;
+    }
+
+    @keyframes slideUp {
+      from { transform: translateY(24px); opacity: 0.6; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    .sheet-header {
+      padding: 14px 16px;
+      border-bottom: 1.5px solid var(--border-soft);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      background: var(--bg-subtle);
+      flex-shrink: 0;
+    }
+
+    .sheet-title {
+      margin: 0;
+      font-size: 17px;
+      font-weight: 900;
+      color: var(--ink-primary);
+      letter-spacing: -0.015em;
+    }
+
+    .sheet-subtitle {
+      font-size: 12.5px;
+      color: var(--ink-muted);
+      font-weight: 600;
+      margin-top: 2px;
+    }
+
+    .close-btn {
+      min-width: 44px;
+      min-height: 44px;
+      border-radius: 10px;
+      border: 1.5px solid var(--border-strong);
+      background: var(--bg-surface);
+      color: var(--ink-primary);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .sheet-body {
+      padding: 16px;
+      overflow-y: auto;
+      flex: 1;
+    }
+
+    .sheet-footer {
+      padding: 12px 16px calc(12px + env(safe-area-inset-bottom, 0px)) 16px;
+      border-top: 1.5px solid var(--border-soft);
+      background: var(--bg-subtle);
+      display: flex;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    /* Form Controls */
+    .form-group {
+      margin-bottom: 14px;
+    }
+
+    .form-label {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--ink-primary);
+      margin-bottom: 6px;
+    }
+
+    .label-req {
+      color: #B91C1C;
+      margin-left: 2px;
+    }
+
+    .label-opt {
+      font-size: 11.5px;
+      font-weight: 600;
+      color: var(--ink-muted);
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .big-num-input {
+      font-size: 20px;
+      font-weight: 800;
+      min-height: 52px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .preset-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 7px;
+    }
+
+    .preset-chip {
+      min-height: 36px;
+      padding: 4px 11px;
+      border-radius: 999px;
+      border: 1.5px solid var(--border-strong);
+      background: var(--bg-subtle);
+      color: var(--ink-secondary);
+      font-size: 12.5px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .preset-chip:hover, .preset-chip.selected {
+      background: var(--brand-tint);
+      border-color: var(--brand);
+      color: var(--brand-deep);
+    }
+
+    /* Searchable Combobox */
+    .combo-wrap {
+      position: relative;
+    }
+
+    .combo-dropdown {
+      position: absolute;
+      top: calc(100% + 4px);
+      left: 0;
+      right: 0;
+      max-height: 230px;
+      overflow-y: auto;
+      background: var(--bg-surface);
+      border: 2px solid #0F172A;
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-md);
+      z-index: 80;
+      display: none;
+    }
+
+    .combo-dropdown.open {
+      display: block;
+    }
+
+    .combo-option {
+      width: 100%;
+      min-height: 48px;
+      padding: 10px 12px;
+      border: none;
+      border-bottom: 1px solid var(--border-soft);
+      background: transparent;
+      color: var(--ink-primary);
+      font-family: inherit;
+      font-size: 14.5px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      text-align: left;
+    }
+
+    .combo-option:last-child {
+      border-bottom: none;
+    }
+
+    .combo-option:hover, .combo-option.selected {
+      background: var(--brand-tint);
+    }
+
+    .combo-add-new {
+      color: var(--brand-deep);
+      background: var(--bg-subtle);
+      font-weight: 800;
+    }
+
+    .selected-angler-pill {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 12px;
+      margin-top: 6px;
+      border-radius: 10px;
+      background: var(--brand-tint);
+      border: 1.5px solid #7DD3FC;
+      color: var(--brand-deep);
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .timestamp-preview {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 12px;
+      border-radius: 10px;
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-soft);
+      font-size: 12.5px;
+      font-weight: 700;
+      color: var(--ink-secondary);
+      margin-bottom: 14px;
+    }
+
+    .error-msg {
+      background: var(--danger-bg);
+      border: 1.5px solid var(--danger-border);
+      color: var(--danger-ink);
+      border-radius: 10px;
+      padding: 10px 12px;
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      display: none;
+    }
+
+    .error-msg.visible {
+      display: block;
+    }
+
+    /* Drawer Ranking Rows */
+    .drawer-rule-box {
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-strong);
+      border-radius: 10px;
+      padding: 10px 12px;
+      font-size: 12.5px;
+      color: var(--ink-secondary);
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+
+    .rank-list-item {
+      width: 100%;
+      border: 1.5px solid var(--border-soft);
+      border-radius: 12px;
+      background: var(--bg-surface);
+      padding: 11px 12px;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      cursor: pointer;
+      text-align: left;
+      font: inherit;
+      color: inherit;
+    }
+
+    .rank-list-item.place-1 {
+      background: var(--gold-bg);
+      border-color: var(--gold-border);
+    }
+
+    .rank-list-item.place-2 {
+      background: var(--silver-bg);
+      border-color: var(--silver-border);
+    }
+
+    .rank-list-item:hover {
+      border-color: var(--brand);
+    }
+
+    /* Profile Standings Grid */
+    .mini-standings {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .mini-standing-card {
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-strong);
+      border-radius: 10px;
+      padding: 8px 10px;
+    }
+
+    .mini-standing-card.top-2 {
+      background: var(--gold-bg);
+      border-color: var(--gold-border);
+    }
+
+    /* Empty State */
+    .empty-state {
+      text-align: center;
+      padding: 36px 20px;
+      background: var(--bg-surface);
+      border: 1.5px dashed var(--border-strong);
+      border-radius: var(--radius-lg);
+      color: var(--ink-muted);
+    }
+
+    .empty-state h3 {
+      margin: 10px 0 6px 0;
+      color: var(--ink-primary);
+      font-size: 16px;
+      font-weight: 800;
+    }
+
+    .empty-state p {
+      margin: 0 0 14px 0;
+      font-size: 13.5px;
+    }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: calc(146px + env(safe-area-inset-bottom, 0px));
+      left: 50%;
+      transform: translateX(-50%) translateY(16px);
+      background: #0F172A;
+      color: #FFFFFF;
+      padding: 11px 16px;
+      border-radius: 12px;
+      font-size: 13.5px;
+      font-weight: 700;
+      box-shadow: var(--shadow-md);
+      z-index: 90;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      max-width: calc(100vw - 32px);
+      text-align: center;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* Print Preview Modal Content */
+    .print-doc {
+      background: #FFFFFF;
+      color: #000000;
+      font-size: 13px;
+    }
+
+    .print-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 16px;
+      font-size: 12px;
+    }
+
+    .print-table th, .print-table td {
+      border: 1px solid #CBD5E1;
+      padding: 6px 8px;
+      text-align: left;
+    }
+
+    .print-table th {
+      background: #F1F5F9;
+      font-weight: 800;
+    }
+
+    .print-void-row {
+      text-decoration: line-through;
+      color: #991B1B;
+      background: #FEF2F2;
+    }
+
+    .hidden-print-root {
+      display: none;
+    }
+
+    @media print {
+      body {
+        background: #FFFFFF !important;
+      }
+      .app-theme {
+        display: none !important;
+      }
+      .hidden-print-root {
+        display: block !important;
+        padding: 16px;
+        color: #000000;
+        background: #FFFFFF;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-theme" id="appRoot">
+    <div class="mobile-shell">
+      <!-- Top Header -->
+      <header class="app-header">
+        <div class="header-row">
+          <div class="brand-block">
+            <div class="brand-mark" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M6.5 12c.94-3.46 4.94-6 8.5-6 3.56 0 6.06 2.54 7 6-.94 3.47-3.44 6-7 6-3.56 0-7.56-2.53-8.5-6Z"></path>
+                <path d="M18 12v.5"></path>
+                <path d="M16 17.93a9.77 9.77 0 0 1 0-11.86"></path>
+                <path d="M7 10.67C7 8 5.58 5.97 2.73 5.5c-1 1.5-1 5 .23 6.5-1.24 1.5-1.24 5-.23 6.5C5.58 18.03 7 16 7 13.33"></path>
+              </svg>
+            </div>
+            <div class="brand-text">
+              <h1 class="app-title" id="headerCompTitle">TideLine Comp Scorer</h1>
+              <div class="app-subtitle">
+                <span class="offline-dot" title="Saved locally on device"></span>
+                <span id="headerStats">2 anglers · 0 active</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="header-controls">
+            <button type="button" id="sampleToggleBtn" class="sample-toggle-btn" role="switch" aria-checked="false" title="Toggle realistic sample competition data">
+              <span>Sample</span>
+              <span class="toggle-track" aria-hidden="true"><span class="toggle-thumb"></span></span>
+            </button>
+            <button type="button" id="settingsBtn" class="icon-btn" aria-label="Competition Settings" title="Competition Settings">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="3"></circle>
+                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9c.26.6.85 1 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <!-- Sample Mode Indicator Banner -->
+      <div id="sampleBanner" class="sample-banner" style="display:none;">
+        <span>Sample Competition Mode Active (live data safely preserved)</span>
+        <button type="button" id="exitSampleBtn">Exit Sample</button>
+      </div>
+
+      <!-- Main Tab Viewport -->
+      <main class="main-content" id="mainContent"></main>
+
+      <!-- Floating Action Button: Log Catch -->
+      <div class="fab-wrap">
+        <button type="button" id="fabLogCatch" class="fab-btn" aria-label="Log New Catch">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+          <span>Catch</span>
+        </button>
+      </div>
+
+      <!-- Three-Tab Bottom Navigation -->
+      <nav class="bottom-nav" aria-label="Primary Navigation">
+        <button type="button" class="nav-tab" data-tab="podium" id="navPodium">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path>
+            <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path>
+            <path d="M4 22h16"></path>
+            <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path>
+            <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path>
+            <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path>
+          </svg>
+          <span>Podium</span>
+        </button>
+
+        <button type="button" class="nav-tab active" data-tab="anglers" id="navAnglers">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+            <circle cx="9" cy="7" r="4"></circle>
+            <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+          </svg>
+          <span>Anglers</span>
+        </button>
+
+        <button type="button" class="nav-tab" data-tab="audit" id="navAudit">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"></path>
+            <rect x="9" y="3" width="6" height="4" rx="1"></rect>
+            <path d="m9 14 2 2 4-4"></path>
+          </svg>
+          <span>Audit Log</span>
+        </button>
+      </nav>
+    </div>
+
+    <!-- Modal Container (Dynamic Sheets) -->
+    <div id="modalBackdrop" class="modal-backdrop" role="dialog" aria-modal="true">
+      <div id="modalSheet" class="sheet-panel"></div>
+    </div>
+
+    <!-- Toast Feedback -->
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  </div>
+
+  <!-- Dedicated Printable Report Root -->
+  <div id="printRoot" class="hidden-print-root"></div>
+
+  <script>
+    (function () {
+      'use strict';
+
+      /* =========================================================
+         CONSTANTS & CATEGORIES
+      ========================================================= */
+      const STORAGE_KEY = 'tideline_fishing_comp_v1';
+      const DEFAULT_SPECIES = ['Snapper', 'Kingfish', 'Flathead', 'Bream', 'Mulloway', 'Trout', 'Bass', 'Barramundi'];
+      const DEFAULT_DIVISIONS = ['Senior', 'Junior', 'Ladies', 'Masters'];
+      const EDIT_REASONS = [
+        'Scale tare correction',
+        'Typo in length/weight',
+        'Corrected angler selection',
+        'Updated photo reference'
+      ];
+      const VOID_REASONS = [
+        'Duplicate entry',
+        'Undersize fish',
+        'Photo verification failed',
+        'Wrong angler — re-logged'
+      ];
+
+      const CATEGORIES = [
+        {
+          id: 'longest_single',
+          title: 'Longest Single Fish',
+          shortTitle: 'Longest Fish',
+          unit: 'cm',
+          ruleDesc: 'Highest individual length entry (active catches only).',
+          tieDesc: 'Tie-breaker: 1) Earlier catch timestamp · 2) Heavier fish weight · 3) Heavier combined weight',
+          icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M21.3 15.3a2.4 2.4 0 0 1 0 3.4l-2.6 2.6a2.4 2.4 0 0 1-3.4 0L2.7 8.7a2.41 2.41 0 0 1 0-3.4l2.6-2.6a2.41 2.41 0 0 1 3.4 0Z"/><path d="m14.5 12.5 2-2"/><path d="m11.5 9.5 2-2"/><path d="m8.5 6.5 2-2"/><path d="m17.5 15.5 2-2"/></svg>'
+        },
+        {
+          id: 'heaviest_single',
+          title: 'Heaviest Single Fish',
+          shortTitle: 'Heaviest Fish',
+          unit: 'kg',
+          ruleDesc: 'Highest individual weight entry (active catches only).',
+          tieDesc: 'Tie-breaker: 1) Earlier catch timestamp · 2) Longer fish length · 3) Longest combined length',
+          icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="M7 21h10"/><path d="M12 3v18"/><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/></svg>'
+        },
+        {
+          id: 'most_fish',
+          title: 'Most Fish Caught',
+          shortTitle: 'Most Fish',
+          unit: 'fish',
+          ruleDesc: 'Highest total count of verified active catches per angler.',
+          tieDesc: 'Tie-breaker: 1) Heaviest combined weight · 2) Longest combined length · 3) Earlier final catch',
+          icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M6.5 12c.94-3.46 4.94-6 8.5-6 3.56 0 6.06 2.54 7 6-.94 3.47-3.44 6-7 6-3.56 0-7.56-2.53-8.5-6Z"/><path d="M18 12v.5"/><path d="M7 10.67C7 8 5.58 5.97 2.73 5.5c-1 1.5-1 5 .23 6.5-1.24 1.5-1.24 5-.23 6.5C5.58 18.03 7 16 7 13.33"/></svg>'
+        },
+        {
+          id: 'combined_weight',
+          title: 'Heaviest Combined Weight',
+          shortTitle: 'Total Weight',
+          unit: 'kg',
+          ruleDesc: 'Sum of weights of all active catches logged by an angler.',
+          tieDesc: 'Tie-breaker: 1) Heaviest single fish · 2) Longest combined length · 3) Earlier final catch',
+          icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="3"/><path d="M6.5 8a2 2 0 0 0-1.9 1.46L2.1 18.5A2 2 0 0 0 4 21h16a2 2 0 0 0 1.9-2.54L19.4 9.5A2 2 0 0 0 17.48 8Z"/></svg>'
+        },
+        {
+          id: 'combined_length',
+          title: 'Longest Combined Length',
+          shortTitle: 'Total Length',
+          unit: 'cm',
+          ruleDesc: 'Sum of lengths of all active catches logged by an angler.',
+          tieDesc: 'Tie-breaker: 1) Longest single fish · 2) Heaviest combined weight · 3) Earlier final catch',
+          icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7v10"/><path d="M21 7v10"/><path d="M3 12h18"/><path d="m7 9-4 3 4 3"/><path d="m17 9 4 3-4 3"/></svg>'
+        }
+      ];
+
+      /* =========================================================
+         HELPERS & FORMATTING
+      ========================================================= */
+      function escapeHtml(str) {
+        if (str == null) return '';
+        return String(str)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#39;');
+      }
+
+      function roundTo(val, decimals) {
+        const f = Math.pow(10, decimals);
+        return Math.round((Number(val) + Number.EPSILON) * f) / f;
+      }
+
+      function toCenti(val) {
+        return Math.round(Number(val) * 100);
+      }
+
+      function toGrams(val) {
+        return Math.round(Number(val) * 1000);
+      }
+
+      function formatLength(cm) {
+        const n = roundTo(cm, 2);
+        const s = n.toFixed(2);
+        return s.endsWith('0') ? n.toFixed(1) : s;
+      }
+
+      function formatWeight(kg) {
+        const n = roundTo(kg, 3);
+        const s = n.toFixed(3);
+        return s.endsWith('0') ? n.toFixed(2) : s;
+      }
+
+      function formatTime(iso) {
+        const d = new Date(iso);
+        if (isNaN(d.getTime())) return '—';
+        return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
+      }
+
+      function formatShortTime(iso) {
+        const d = new Date(iso);
+        if (isNaN(d.getTime())) return '—';
+        return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+      }
+
+      function formatDateTime(iso) {
+        const d = new Date(iso);
+        if (isNaN(d.getTime())) return '—';
+        const day = d.toLocaleDateString([], { day: '2-digit', month: 'short' });
+        return `${formatTime(iso)} · ${day}`;
+      }
+
+      function formatLogId(seq) {
+        return 'LOG-' + String(seq).padStart(3, '0');
+      }
+
+      function generateId(prefix) {
+        return prefix + '_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 7);
+      }
+
+      let toastTimer = null;
+      function showToast(msg) {
+        const el = document.getElementById('toast');
+        el.textContent = msg;
+        el.classList.add('show');
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => el.classList.remove('show'), 2800);
+      }
+
+      /* =========================================================
+         SAMPLE COMPETITION DATA GENERATOR
+      ========================================================= */
+      function buildSampleDataset() {
+        const baseDay = new Date();
+        function at(h, m, s) {
+          const d = new Date(baseDay.getFullYear(), baseDay.getMonth(), baseDay.getDate(), h, m, s);
+          return d.toISOString();
+        }
+
+        const anglers = [
+          { id: 'ang_1', name: 'Sarah Chen', badge: '101', division: 'Senior', createdAt: at(6, 10, 0) },
+          { id: 'ang_2', name: "Liam O'Connor", badge: '102', division: 'Senior', createdAt: at(6, 12, 0) },
+          { id: 'ang_3', name: 'Mateo Silva', badge: '103', division: 'Senior', createdAt: at(6, 15, 0) },
+          { id: 'ang_4', name: 'Chloe Patel', badge: '104', division: 'Junior', createdAt: at(6, 18, 0) },
+          { id: 'ang_5', name: 'Jack Kowalski', badge: '105', division: 'Senior', createdAt: at(6, 20, 0) },
+          { id: 'ang_6', name: 'Noah Williams', badge: '106', division: 'Junior', createdAt: at(6, 24, 0) },
+          { id: 'ang_7', name: 'Hannah Brooks', badge: '107', division: 'Senior', createdAt: at(6, 28, 0) },
+          { id: 'ang_8', name: 'Benji Tanaka', badge: '108', division: 'Junior', createdAt: at(6, 35, 0) }
+        ];
+
+        const catches = [
+          {
+            id: 'c_1', seq: 1, anglerId: 'ang_3', species: 'Kingfish',
+            lengthCm: 74.0, weightKg: 5.35, timestamp: at(7, 5, 44),
+            notes: 'Marshal JM • Mat Photo #008', status: 'active', auditTrail: []
+          },
+          {
+            id: 'c_2', seq: 2, anglerId: 'ang_1', species: 'Snapper',
+            lengthCm: 68.5, weightKg: 4.40, timestamp: at(7, 12, 18),
+            notes: 'Marshal JM • Mat Photo #011', status: 'active', auditTrail: []
+          },
+          {
+            id: 'c_3', seq: 3, anglerId: 'ang_4', species: 'Flathead',
+            lengthCm: 52.0, weightKg: 1.70, timestamp: at(7, 24, 11),
+            notes: 'Marshal KR • Mat Photo #012', status: 'active', auditTrail: []
+          },
+          {
+            id: 'c_4', seq: 4, anglerId: 'ang_2', species: 'Kingfish',
+            lengthCm: 74.0, weightKg: 5.80, timestamp: at(7, 38, 52),
+            notes: 'Marshal KR • Mat Photo #014', status: 'active', auditTrail: []
+          },
+          {
+            id: 'c_5', seq: 5, anglerId: 'ang_5', species: 'Bream',
+            lengthCm: 37.0, weightKg: 1.10, timestamp: at(7, 55, 20),
+            notes: 'Marshal JM • Mat Photo #015', status: 'active', auditTrail: []
+          },
+          {
+            id: 'c_6', seq: 6, anglerId: 'ang_7', species: 'Mulloway',
+            lengthCm: 71.5, weightKg: 5.80, timestamp: at(8, 2, 15),
+            notes: 'Marshal JM • Mat Photo #016', status: 'active', auditTrail: []
+          },
+          {
+            id: 'c_7', seq: 7, anglerId: 'ang_4', species: 'Bream',
+            lengthCm: 36.5, weightKg: 1.05, timestamp: at(8, 19, 45),
+            notes: 'Marshal JM • Mat Photo #017', status: 'active', auditTrail: []
+          },
+          {
+            id: 'c_8', seq: 8, anglerId: 'ang_6', species: 'Flathead',
+            lengthCm: 46.0, weightKg: 1.25, timestamp: at(8, 33, 14),
+            notes: 'Marshal KR • Mat Photo #018', status: 'active', auditTrail: []
+          },
+          {
+            id: 'c_9', seq: 9, anglerId: 'ang_1', species: 'Flathead',
+            lengthCm: 54.0, weightKg: 1.85, timestamp: at(8, 45, 3),
+            notes: 'Marshal JM • Mat Photo #019', status: 'active', auditTrail: []
+          },
+          {
+            id: 'c_10', seq: 10, anglerId: 'ang_3', species: 'Bream',
+            lengthCm: 39.0, weightKg: 1.20, timestamp: at(8, 50, 19),
+            notes: 'Marshal KR • Mat Photo #021', status: 'active', auditTrail: []
+          },
+          {
+            id: 'c_11', seq: 11, anglerId: 'ang_5', species: 'Snapper',
+            lengthCm: 58.0, weightKg: 3.20, timestamp: at(9, 5, 33),
+            notes: 'Marshal KR • Mat Photo #022', status: 'active', auditTrail: []
+          },
+          {
+            id: 'c_12', seq: 12, anglerId: 'ang_2', species: 'Snapper',
+            lengthCm: 56.0, weightKg: 2.90, timestamp: at(9, 15, 10),
+            notes: 'Marshal JM • Mat Photo #024', status: 'active',
+            auditTrail: [
+              {
+                action: 'edited',
+                timestamp: at(9, 21, 4),
+                reason: 'Scale tare offset corrected at weigh-in station B',
+                previous: { species: 'Snapper', lengthCm: 56.0, weightKg: 2.60, notes: 'Marshal JM • Mat Photo #024' }
+              }
+            ]
+          },
+          {
+            id: 'c_13', seq: 13, anglerId: 'ang_4', species: 'Snapper',
+            lengthCm: 49.0, weightKg: 2.15, timestamp: at(9, 42, 30),
+            notes: 'Marshal KR • Mat Photo #027', status: 'active', auditTrail: []
+          },
+          {
+            id: 'c_14', seq: 14, anglerId: 'ang_7', species: 'Snapper',
+            lengthCm: 52.5, weightKg: 2.45, timestamp: at(10, 3, 48),
+            notes: 'Marshal KR • Mat Photo #028', status: 'active', auditTrail: []
+          },
+          {
+            id: 'c_15', seq: 15, anglerId: 'ang_5', species: 'Flathead',
+            lengthCm: 47.5, weightKg: 1.35, timestamp: at(10, 11, 9),
+            notes: 'Marshal JM • Mat Photo #029', status: 'active', auditTrail: []
+          },
+          {
+            id: 'c_16', seq: 16, anglerId: 'ang_1', species: 'Bream',
+            lengthCm: 38.5, weightKg: 1.15, timestamp: at(10, 22, 41),
+            notes: 'Marshal KR • Mat Photo #031', status: 'active', auditTrail: []
+          },
+          {
+            id: 'c_17', seq: 17, anglerId: 'ang_6', species: 'Bream',
+            lengthCm: 35.0, weightKg: 0.90, timestamp: at(10, 35, 27),
+            notes: 'Marshal JM • Mat Photo #033', status: 'active', auditTrail: []
+          },
+          {
+            id: 'c_18', seq: 18, anglerId: 'ang_3', species: 'Flathead',
+            lengthCm: 51.5, weightKg: 1.65, timestamp: at(10, 48, 12),
+            notes: 'Marshal JM • Mat Photo #034', status: 'active', auditTrail: []
+          },
+          {
+            id: 'c_19', seq: 19, anglerId: 'ang_2', species: 'Flathead',
+            lengthCm: 48.5, weightKg: 1.40, timestamp: at(11, 4, 29),
+            notes: 'Marshal JM • Mat Photo #037', status: 'active', auditTrail: []
+          },
+          {
+            id: 'c_20', seq: 20, anglerId: 'ang_4', species: 'Bream',
+            lengthCm: 41.0, weightKg: 1.35, timestamp: at(11, 18, 4),
+            notes: 'Marshal JM • Mat Photo #039', status: 'active', auditTrail: []
+          },
+          {
+            id: 'c_21', seq: 21, anglerId: 'ang_5', species: 'Bream',
+            lengthCm: 34.5, weightKg: 0.95, timestamp: at(11, 25, 50),
+            notes: 'Marshal KR • Mat Photo #040', status: 'active', auditTrail: []
+          },
+          {
+            id: 'c_22', seq: 22, anglerId: 'ang_2', species: 'Snapper',
+            lengthCm: 31.0, weightKg: 0.65, timestamp: at(11, 30, 5),
+            notes: 'Marshal KR • Mat Photo #041', status: 'voided',
+            voidReason: 'Duplicate scan of Mat #041 — fish below legal competition minimum',
+            voidedAt: at(11, 33, 22),
+            auditTrail: [
+              {
+                action: 'voided',
+                timestamp: at(11, 33, 22),
+                reason: 'Duplicate scan of Mat #041 — fish below legal competition minimum'
+              }
+            ]
+          }
+        ];
+
+        return {
+          competitionName: 'Port Stephens Classic',
+          anglers,
+          catches,
+          nextSeq: 23
+        };
+      }
+
+      function createEmptyDataset() {
+        return {
+          competitionName: 'TideLine Comp Scorer',
+          anglers: [],
+          catches: [],
+          nextSeq: 1
+        };
+      }
+
+      /* =========================================================
+         STATE MANAGEMENT & LOCALSTORAGE PERSISTENCE
+      ========================================================= */
+      let store = {
+        sampleMode: false,
+        liveData: createEmptyDataset(),
+        sampleData: buildSampleDataset()
+      };
+
+      const uiState = {
+        activeTab: 'podium',
+        divisionFilter: 'ALL',
+        anglerSearch: '',
+        auditFilter: 'ALL',
+        auditSearch: '',
+        auditSort: 'desc',
+        liveClockTimer: null
+      };
+
+      function getDataset() {
+        return store.sampleMode ? store.sampleData : store.liveData;
+      }
+
+      function loadStore() {
+        try {
+          const raw = localStorage.getItem(STORAGE_KEY);
+          if (raw) {
+            const parsed = JSON.parse(raw);
+            if (parsed && parsed.liveData) {
+              store.sampleMode = Boolean(parsed.sampleMode);
+              store.liveData = parsed.liveData;
+              store.sampleData = parsed.sampleData || buildSampleDataset();
+            }
+          }
+        } catch (err) {
+          console.warn('Storage unavailable, using in-memory session.', err);
+        }
+      }
+
+      function saveStore() {
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(store));
+        } catch (err) {
+          console.warn('Could not persist to localStorage:', err);
+        }
+      }
+
+      /* =========================================================
+         AUTOMATED SCORING & TIE-BREAKER ENGINE
+      ========================================================= */
+      function computeAllStats(dataset, divisionFilter) {
+        const anglers = dataset.anglers.filter(a => divisionFilter === 'ALL' || a.division === divisionFilter);
+        const anglerMap = new Map();
+        anglers.forEach(a => anglerMap.set(a.id, a));
+
+        const activeCatches = dataset.catches.filter(c => c.status !== 'voided' && anglerMap.has(c.anglerId));
+        const allAnglerStats = new Map();
+
+        anglers.forEach(a => {
+          allAnglerStats.set(a.id, {
+            angler: a,
+            catches: [],
+            count: 0,
+            totalWeightGrams: 0,
+            totalLengthCenti: 0,
+            totalWeightKg: 0,
+            totalLengthCm: 0,
+            bestLengthCatch: null,
+            bestWeightCatch: null,
+            lastCatchTime: Infinity
+          });
+        });
+
+        activeCatches.forEach(c => {
+          const st = allAnglerStats.get(c.anglerId);
+          if (!st) return;
+          st.catches.push(c);
+          st.count += 1;
+          st.totalWeightGrams += toGrams(c.weightKg);
+          st.totalLengthCenti += toCenti(c.lengthCm);
+
+          const cTime = Date.parse(c.timestamp) || 0;
+
+          // Best single length catch: longest, then earliest timestamp, then heaviest
+          if (!st.bestLengthCatch) {
+            st.bestLengthCatch = c;
+          } else {
+            const b = st.bestLengthCatch;
+            const bTime = Date.parse(b.timestamp) || 0;
+            if (
+              toCenti(c.lengthCm) > toCenti(b.lengthCm) ||
+              (toCenti(c.lengthCm) === toCenti(b.lengthCm) && cTime < bTime) ||
+              (toCenti(c.lengthCm) === toCenti(b.lengthCm) && cTime === bTime && toGrams(c.weightKg) > toGrams(b.weightKg))
+            ) {
+              st.bestLengthCatch = c;
+            }
+          }
+
+          // Best single weight catch: heaviest, then earliest timestamp, then longest
+          if (!st.bestWeightCatch) {
+            st.bestWeightCatch = c;
+          } else {
+            const b = st.bestWeightCatch;
+            const bTime = Date.parse(b.timestamp) || 0;
+            if (
+              toGrams(c.weightKg) > toGrams(b.weightKg) ||
+              (toGrams(c.weightKg) === toGrams(b.weightKg) && cTime < bTime) ||
+              (toGrams(c.weightKg) === toGrams(b.weightKg) && cTime === bTime && toCenti(c.lengthCm) > toCenti(b.lengthCm))
+            ) {
+              st.bestWeightCatch = c;
+            }
+          }
+        });
+
+        allAnglerStats.forEach(st => {
+          st.totalWeightKg = st.totalWeightGrams / 1000;
+          st.totalLengthCm = st.totalLengthCenti / 100;
+          if (st.catches.length > 0) {
+            st.lastCatchTime = Math.max(...st.catches.map(c => Date.parse(c.timestamp) || 0));
+          }
+        });
+
+        const rankedAnglerList = Array.from(allAnglerStats.values()).filter(st => st.count > 0);
+        const unrankedAnglers = Array.from(allAnglerStats.values())
+          .filter(st => st.count === 0)
+          .sort((a, b) => a.angler.name.localeCompare(b.angler.name));
+
+        function buildCategoryRanking(catId) {
+          let entries = [];
+
+          if (catId === 'longest_single') {
+            entries = rankedAnglerList.map(st => ({
+              angler: st.angler,
+              stats: st,
+              catchRef: st.bestLengthCatch,
+              primaryRaw: toCenti(st.bestLengthCatch.lengthCm),
+              primaryDisplay: formatLength(st.bestLengthCatch.lengthCm),
+              unit: 'cm',
+              meta: `${st.bestLengthCatch.species || 'Unlisted'} · ${formatShortTime(st.bestLengthCatch.timestamp)}`
+            }));
+
+            entries.sort((a, b) => {
+              if (b.primaryRaw !== a.primaryRaw) return b.primaryRaw - a.primaryRaw;
+              const tA = Date.parse(a.catchRef.timestamp) || 0;
+              const tB = Date.parse(b.catchRef.timestamp) || 0;
+              if (tA !== tB) return tA - tB;
+              const wA = toGrams(a.catchRef.weightKg);
+              const wB = toGrams(b.catchRef.weightKg);
+              if (wB !== wA) return wB - wA;
+              if (b.stats.totalWeightGrams !== a.stats.totalWeightGrams) return b.stats.totalWeightGrams - a.stats.totalWeightGrams;
+              return a.angler.badge.localeCompare(b.angler.badge);
+            });
+          } else if (catId === 'heaviest_single') {
+            entries = rankedAnglerList.map(st => ({
+              angler: st.angler,
+              stats: st,
+              catchRef: st.bestWeightCatch,
+              primaryRaw: toGrams(st.bestWeightCatch.weightKg),
+              primaryDisplay: formatWeight(st.bestWeightCatch.weightKg),
+              unit: 'kg',
+              meta: `${st.bestWeightCatch.species || 'Unlisted'} · ${formatShortTime(st.bestWeightCatch.timestamp)}`
+            }));
+
+            entries.sort((a, b) => {
+              if (b.primaryRaw !== a.primaryRaw) return b.primaryRaw - a.primaryRaw;
+              const tA = Date.parse(a.catchRef.timestamp) || 0;
+              const tB = Date.parse(b.catchRef.timestamp) || 0;
+              if (tA !== tB) return tA - tB;
+              const lA = toCenti(a.catchRef.lengthCm);
+              const lB = toCenti(b.catchRef.lengthCm);
+              if (lB !== lA) return lB - lA;
+              if (b.stats.totalLengthCenti !== a.stats.totalLengthCenti) return b.stats.totalLengthCenti - a.stats.totalLengthCenti;
+              return a.angler.badge.localeCompare(b.angler.badge);
+            });
+          } else if (catId === 'most_fish') {
+            entries = rankedAnglerList.map(st => ({
+              angler: st.angler,
+              stats: st,
+              catchRef: null,
+              primaryRaw: st.count,
+              primaryDisplay: String(st.count),
+              unit: st.count === 1 ? 'fish' : 'fish',
+              meta: `Total ${formatWeight(st.totalWeightKg)} kg · ${formatLength(st.totalLengthCm)} cm`
+            }));
+
+            entries.sort((a, b) => {
+              if (b.primaryRaw !== a.primaryRaw) return b.primaryRaw - a.primaryRaw;
+              if (b.stats.totalWeightGrams !== a.stats.totalWeightGrams) return b.stats.totalWeightGrams - a.stats.totalWeightGrams;
+              if (b.stats.totalLengthCenti !== a.stats.totalLengthCenti) return b.stats.totalLengthCenti - a.stats.totalLengthCenti;
+              if (a.stats.lastCatchTime !== b.stats.lastCatchTime) return a.stats.lastCatchTime - b.stats.lastCatchTime;
+              return a.angler.badge.localeCompare(b.angler.badge);
+            });
+          } else if (catId === 'combined_weight') {
+            entries = rankedAnglerList.map(st => ({
+              angler: st.angler,
+              stats: st,
+              catchRef: null,
+              primaryRaw: st.totalWeightGrams,
+              primaryDisplay: formatWeight(st.totalWeightKg),
+              unit: 'kg',
+              meta: `${st.count} ${st.count === 1 ? 'fish' : 'fish'} · Best ${formatWeight(st.bestWeightCatch.weightKg)} kg`
+            }));
+
+            entries.sort((a, b) => {
+              if (b.primaryRaw !== a.primaryRaw) return b.primaryRaw - a.primaryRaw;
+              const bwA = toGrams(a.stats.bestWeightCatch.weightKg);
+              const bwB = toGrams(b.stats.bestWeightCatch.weightKg);
+              if (bwB !== bwA) return bwB - bwA;
+              if (b.stats.totalLengthCenti !== a.stats.totalLengthCenti) return b.stats.totalLengthCenti - a.stats.totalLengthCenti;
+              if (a.stats.lastCatchTime !== b.stats.lastCatchTime) return a.stats.lastCatchTime - b.stats.lastCatchTime;
+              return a.angler.badge.localeCompare(b.angler.badge);
+            });
+          } else if (catId === 'combined_length') {
+            entries = rankedAnglerList.map(st => ({
+              angler: st.angler,
+              stats: st,
+              catchRef: null,
+              primaryRaw: st.totalLengthCenti,
+              primaryDisplay: formatLength(st.totalLengthCm),
+              unit: 'cm',
+              meta: `${st.count} ${st.count === 1 ? 'fish' : 'fish'} · Best ${formatLength(st.bestLengthCatch.lengthCm)} cm`
+            }));
+
+            entries.sort((a, b) => {
+              if (b.primaryRaw !== a.primaryRaw) return b.primaryRaw - a.primaryRaw;
+              const blA = toCenti(a.stats.bestLengthCatch.lengthCm);
+              const blB = toCenti(b.stats.bestLengthCatch.lengthCm);
+              if (blB !== blA) return blB - blA;
+              if (b.stats.totalWeightGrams !== a.stats.totalWeightGrams) return b.stats.totalWeightGrams - a.stats.totalWeightGrams;
+              if (a.stats.lastCatchTime !== b.stats.lastCatchTime) return a.stats.lastCatchTime - b.stats.lastCatchTime;
+              return a.angler.badge.localeCompare(b.angler.badge);
+            });
+          }
+
+          // Detect ties on primaryRaw and attach explicit tie-breaker reason
+          const groups = new Map();
+          entries.forEach(e => {
+            if (!groups.has(e.primaryRaw)) groups.set(e.primaryRaw, []);
+            groups.get(e.primaryRaw).push(e);
+          });
+
+          entries.forEach((e, idx) => {
+            e.rank = idx + 1;
+            const grp = groups.get(e.primaryRaw);
+            if (grp && grp.length > 1) {
+              e.tieBreakerApplied = true;
+              e.tieBreakerReason = describeTieBreaker(catId, e, grp);
+            } else {
+              e.tieBreakerApplied = false;
+              e.tieBreakerReason = '';
+            }
+          });
+
+          return {
+            categoryId: catId,
+            entries,
+            unranked: unrankedAnglers
+          };
+        }
+
+        function describeTieBreaker(catId, entry, tiedGroup) {
+          if (catId === 'longest_single') {
+            const times = new Set(tiedGroup.map(x => Date.parse(x.catchRef.timestamp)));
+            if (times.size > 1) return `TB: Time ${formatShortTime(entry.catchRef.timestamp)}`;
+            const weights = new Set(tiedGroup.map(x => toGrams(x.catchRef.weightKg)));
+            if (weights.size > 1) return `TB: Fish ${formatWeight(entry.catchRef.weightKg)} kg`;
+            return `TB: Total ${formatWeight(entry.stats.totalWeightKg)} kg`;
+          }
+          if (catId === 'heaviest_single') {
+            const times = new Set(tiedGroup.map(x => Date.parse(x.catchRef.timestamp)));
+            if (times.size > 1) return `TB: Time ${formatShortTime(entry.catchRef.timestamp)}`;
+            const lengths = new Set(tiedGroup.map(x => toCenti(x.catchRef.lengthCm)));
+            if (lengths.size > 1) return `TB: Fish ${formatLength(entry.catchRef.lengthCm)} cm`;
+            return `TB: Total ${formatLength(entry.stats.totalLengthCm)} cm`;
+          }
+          if (catId === 'most_fish') {
+            const weights = new Set(tiedGroup.map(x => x.stats.totalWeightGrams));
+            if (weights.size > 1) return `TB: Total ${formatWeight(entry.stats.totalWeightKg)} kg`;
+            const lengths = new Set(tiedGroup.map(x => x.stats.totalLengthCenti));
+            if (lengths.size > 1) return `TB: Total ${formatLength(entry.stats.totalLengthCm)} cm`;
+            return `TB: Earlier finish`;
+          }
+          if (catId === 'combined_weight') {
+            const bestW = new Set(tiedGroup.map(x => toGrams(x.stats.bestWeightCatch.weightKg)));
+            if (bestW.size > 1) return `TB: Best ${formatWeight(entry.stats.bestWeightCatch.weightKg)} kg`;
+            const lengths = new Set(tiedGroup.map(x => x.stats.totalLengthCenti));
+            if (lengths.size > 1) return `TB: Total ${formatLength(entry.stats.totalLengthCm)} cm`;
+            return `TB: Earlier finish`;
+          }
+          if (catId === 'combined_length') {
+            const bestL = new Set(tiedGroup.map(x => toCenti(x.stats.bestLengthCatch.lengthCm)));
+            if (bestL.size > 1) return `TB: Best ${formatLength(entry.stats.bestLengthCatch.lengthCm)} cm`;
+            const weights = new Set(tiedGroup.map(x => x.stats.totalWeightGrams));
+            if (weights.size > 1) return `TB: Total ${formatWeight(entry.stats.totalWeightKg)} kg`;
+            return `TB: Earlier finish`;
+          }
+          return 'TB Applied';
+        }
+
+        const leaderboards = {};
+        CATEGORIES.forEach(cat => {
+          leaderboards[cat.id] = buildCategoryRanking(cat.id);
+        });
+
+        // Map each angler's podium counts
+        const podiumMap = new Map();
+        anglers.forEach(a => podiumMap.set(a.id, { firsts: 0, seconds: 0, ranks: {} }));
+        CATEGORIES.forEach(cat => {
+          leaderboards[cat.id].entries.forEach(e => {
+            const pm = podiumMap.get(e.angler.id);
+            if (!pm) return;
+            pm.ranks[cat.id] = { rank: e.rank, value: `${e.primaryDisplay} ${e.unit}`, tb: e.tieBreakerReason };
+            if (e.rank === 1) pm.firsts += 1;
+            if (e.rank === 2) pm.seconds += 1;
+          });
+        });
+
+        return {
+          allAnglerStats,
+          leaderboards,
+          podiumMap,
+          activeCatchCount: activeCatches.length
+        };
+      }
+
+      /* =========================================================
+         RENDERING: HEADER & TABS
+      ========================================================= */
+      function renderApp() {
+        const ds = getDataset();
+        const activeCount = ds.catches.filter(c => c.status !== 'voided').length;
+        const voidCount = ds.catches.length - activeCount;
+
+        document.getElementById('headerCompTitle').textContent = ds.competitionName || 'TideLine Comp Scorer';
+        document.getElementById('headerStats').textContent =
+          `${ds.anglers.length} ${ds.anglers.length === 1 ? 'angler' : 'anglers'} · ${activeCount} active` +
+          (voidCount > 0 ? ` · ${voidCount} void` : '');
+
+        const sampleBtn = document.getElementById('sampleToggleBtn');
+        sampleBtn.classList.toggle('active', store.sampleMode);
+        sampleBtn.setAttribute('aria-checked', String(store.sampleMode));
+        document.getElementById('sampleBanner').style.display = store.sampleMode ? 'flex' : 'none';
+
+        // Update nav tabs
+        document.querySelectorAll('.nav-tab').forEach(btn => {
+          btn.classList.toggle('active', btn.dataset.tab === uiState.activeTab);
+        });
+
+        // Ensure current divisionFilter is still valid
+        const divs = getAvailableDivisions(ds);
+        if (uiState.divisionFilter !== 'ALL' && !divs.includes(uiState.divisionFilter)) {
+          uiState.divisionFilter = 'ALL';
+        }
+
+        const main = document.getElementById('mainContent');
+        if (uiState.activeTab === 'podium') {
+          main.innerHTML = renderPodiumTab(ds);
+          bindPodiumEvents();
+        } else if (uiState.activeTab === 'anglers') {
+          main.innerHTML = renderAnglersTab(ds);
+          bindAnglersEvents();
+        } else {
+          main.innerHTML = renderAuditTab(ds);
+          bindAuditEvents();
+        }
+      }
+
+      function getAvailableDivisions(ds) {
+        const set = new Set();
+        ds.anglers.forEach(a => {
+          if (a.division) set.add(a.division);
+        });
+        return Array.from(set);
+      }
+
+      function renderDivisionFilterBar(ds) {
+        const divs = getAvailableDivisions(ds);
+        if (divs.length <= 1) return '';
+        return `
+          <div class="filter-strip" aria-label="Filter by Division">
+            <button type="button" class="chip-btn ${uiState.divisionFilter === 'ALL' ? 'active' : ''}" data-div="ALL">All Divisions</button>
+            ${divs.map(d => `
+              <button type="button" class="chip-btn ${uiState.divisionFilter === d ? 'active' : ''}" data-div="${escapeHtml(d)}">${escapeHtml(d)}</button>
+            `).join('')}
+          </div>
+        `;
+      }
+
+      /* =========================================================
+         TAB 1: PODIUM (SUMMARY VIEW)
+      ========================================================= */
+      function renderPodiumTab(ds) {
+        const computed = computeAllStats(ds, uiState.divisionFilter);
+
+        if (ds.anglers.length === 0) {
+          return `
+            <div class="empty-state">
+              <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#0369A1" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/>
+                <path d="M4 22h16"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/>
+              </svg>
+              <h3>Ready for Weigh-In</h3>
+              <p>Register anglers and tap <strong>+ Catch</strong> to start live scoring, or toggle <strong>Sample</strong> above to preview a full tournament.</p>
+              <div style="display:flex; gap:8px; justify-content:center; flex-wrap:wrap;">
+                <button type="button" class="btn btn-primary" id="emptyRegBtn">+ Register Angler</button>
+                <button type="button" class="btn btn-secondary" id="emptySampleBtn">Load Sample Data</button>
+              </div>
+            </div>
+          `;
+        }
+
+        const cardsHtml = CATEGORIES.map(cat => {
+          const lb = computed.leaderboards[cat.id];
+          const first = lb.entries[0] || null;
+          const second = lb.entries[1] || null;
+          const countLabel = lb.entries.length > 0 ? `${lb.entries.length} ranked` : 'No catches';
+
+          return `
+            <button type="button" class="podium-card" data-open-category="${cat.id}">
+              <div class="podium-card-header">
+                <div class="podium-cat-title">
+                  <span class="cat-icon" aria-hidden="true">${cat.icon}</span>
+                  <span>${escapeHtml(cat.title)}</span>
+                </div>
+                <span class="podium-expand-hint">
+                  <span>${countLabel}</span>
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+                </span>
+              </div>
+              <div class="podium-rows">
+                ${renderPodiumRow(first, 1)}
+                ${renderPodiumRow(second, 2)}
+              </div>
+            </button>
+          `;
+        }).join('');
+
+        return `
+          ${renderDivisionFilterBar(ds)}
+          <div class="podium-grid">
+            ${cardsHtml}
+          </div>
+        `;
+      }
+
+      function renderPodiumRow(entry, place) {
+        const badgeLabel = place === 1 ? '1ST' : '2ND';
+        const badgeClass = place === 1 ? 'rank-1' : 'rank-2';
+        const rowClass = place === 1 ? 'place-1' : 'place-2';
+
+        if (!entry) {
+          return `
+            <div class="podium-row ${rowClass}">
+              <div class="empty-slot" style="padding:0;">
+                <span class="rank-badge ${badgeClass}">${badgeLabel}</span>
+                <span>Awaiting qualifying catch...</span>
+              </div>
+            </div>
+          `;
+        }
+
+        const tbHtml = entry.tieBreakerApplied
+          ? `<span class="tb-badge" title="Tie-breaker applied">${escapeHtml(entry.tieBreakerReason)}</span>`
+          : '';
+
+        return `
+          <div class="podium-row ${rowClass}">
+            <div class="podium-left">
+              <span class="rank-badge ${badgeClass}">${badgeLabel}</span>
+              <div class="podium-angler-info">
+                <div class="podium-name-line">
+                  <span class="podium-angler-name">${escapeHtml(entry.angler.name)}</span>
+                  <span class="badge-tag mono">#${escapeHtml(entry.angler.badge)}</span>
+                </div>
+                <div class="podium-meta">
+                  <span>${escapeHtml(entry.meta)}</span>
+                  ${tbHtml}
+                </div>
+              </div>
+            </div>
+            <div class="podium-score tabular">
+              <span class="score-value">${escapeHtml(entry.primaryDisplay)}</span><span class="score-unit">${escapeHtml(entry.unit)}</span>
+            </div>
+          </div>
+        `;
+      }
+
+      function bindPodiumEvents() {
+        document.querySelectorAll('[data-div]').forEach(btn => {
+          btn.addEventListener('click', () => {
+            uiState.divisionFilter = btn.dataset.div;
+            renderApp();
+          });
+        });
+
+        document.querySelectorAll('[data-open-category]').forEach(card => {
+          card.addEventListener('click', () => {
+            openCategoryDrawer(card.dataset.openCategory);
+          });
+        });
+
+        const emptyReg = document.getElementById('emptyRegBtn');
+        if (emptyReg) emptyReg.addEventListener('click', () => openAnglerFormModal(null));
+
+        const emptySample = document.getElementById('emptySampleBtn');
+        if (emptySample) emptySample.addEventListener('click', toggleSampleMode);
+      }
+
+      /* =========================================================
+         TAB 2: ANGLERS (ROSTER VIEW)
+      ========================================================= */
+      function renderAnglersTab(ds) {
+        const computed = computeAllStats(ds, 'ALL');
+        const query = uiState.anglerSearch.trim().toLowerCase();
+
+        const filtered = ds.anglers
+          .filter(a => uiState.divisionFilter === 'ALL' || a.division === uiState.divisionFilter)
+          .filter(a => {
+            if (!query) return true;
+            return (
+              a.name.toLowerCase().includes(query) ||
+              a.badge.toLowerCase().includes(query) ||
+              (a.division || '').toLowerCase().includes(query)
+            );
+          })
+          .sort((a, b) => {
+            const stA = computed.allAnglerStats.get(a.id);
+            const stB = computed.allAnglerStats.get(b.id);
+            const cA = stA ? stA.count : 0;
+            const cB = stB ? stB.count : 0;
+            if (cB !== cA) return cB - cA;
+            return a.name.localeCompare(b.name);
+          });
+
+        const listHtml = filtered.length === 0
+          ? `
+            <div class="empty-state">
+              <h3>${ds.anglers.length === 0 ? 'No Anglers Registered' : 'No Matching Anglers'}</h3>
+              <p>${ds.anglers.length === 0 ? 'Add competitors with their badge ID and division to begin logging catches.' : 'Try clearing your search or division filter.'}</p>
+              ${ds.anglers.length === 0 ? '<button type="button" class="btn btn-primary" id="emptyAnglerAddBtn">+ Register First Angler</button>' : ''}
+            </div>
+          `
+          : `
+            <div class="list-stack">
+              ${filtered.map(a => {
+                const st = computed.allAnglerStats.get(a.id) || { count: 0, totalWeightKg: 0, totalLengthCm: 0 };
+                const pm = computed.podiumMap.get(a.id) || { firsts: 0, seconds: 0 };
+                const podiumLabels = [];
+                if (pm.firsts > 0) podiumLabels.push(`${pm.firsts}× 1st`);
+                if (pm.seconds > 0) podiumLabels.push(`${pm.seconds}× 2nd`);
+                const divClass = (a.division || '').toLowerCase() === 'junior' ? 'junior' : '';
+
+                return `
+                  <button type="button" class="angler-card" data-open-angler="${a.id}">
+                    <div class="angler-card-top">
+                      <div>
+                        <div class="angler-name">${escapeHtml(a.name)}</div>
+                        <div style="display:flex; align-items:center; gap:6px; margin-top:4px; flex-wrap:wrap;">
+                          <span class="badge-tag mono">#${escapeHtml(a.badge)}</span>
+                          <span class="div-pill ${divClass}">${escapeHtml(a.division || 'Open')}</span>
+                        </div>
+                      </div>
+                      ${podiumLabels.length > 0 ? `<span class="podium-count-pill">${escapeHtml(podiumLabels.join(' · '))}</span>` : ''}
+                    </div>
+                    <div class="angler-stats-grid tabular">
+                      <div>
+                        <div class="stat-cell-label">Fish</div>
+                        <div class="stat-cell-val">${st.count}</div>
+                      </div>
+                      <div>
+                        <div class="stat-cell-label">Total Weight</div>
+                        <div class="stat-cell-val">${formatWeight(st.totalWeightKg)} kg</div>
+                      </div>
+                      <div>
+                        <div class="stat-cell-label">Total Length</div>
+                        <div class="stat-cell-val">${formatLength(st.totalLengthCm)} cm</div>
+                      </div>
+                    </div>
+                  </button>
+                `;
+              }).join('')}
+            </div>
+          `;
+
+        return `
+          <div class="toolbar-row">
+            <div class="search-box">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              <input type="search" id="anglerSearchInput" class="input-field search-input" placeholder="Search name or badge #..." value="${escapeHtml(uiState.anglerSearch)}" />
+            </div>
+            <button type="button" class="btn btn-dark" id="registerAnglerBtn">+ Register</button>
+          </div>
+          ${renderDivisionFilterBar(ds)}
+          ${listHtml}
+        `;
+      }
+
+      function bindAnglersEvents() {
+        const searchInput = document.getElementById('anglerSearchInput');
+        if (searchInput) {
+          searchInput.addEventListener('input', e => {
+            uiState.anglerSearch = e.target.value;
+            const pos = e.target.selectionStart;
+            renderApp();
+            const refreshed = document.getElementById('anglerSearchInput');
+            if (refreshed) {
+              refreshed.focus();
+              refreshed.setSelectionRange(pos, pos);
+            }
+          });
+        }
+
+        const regBtn = document.getElementById('registerAnglerBtn');
+        if (regBtn) regBtn.addEventListener('click', () => openAnglerFormModal(null));
+
+        const emptyBtn = document.getElementById('emptyAnglerAddBtn');
+        if (emptyBtn) emptyBtn.addEventListener('click', () => openAnglerFormModal(null));
+
+        document.querySelectorAll('[data-div]').forEach(btn => {
+          btn.addEventListener('click', () => {
+            uiState.divisionFilter = btn.dataset.div;
+            renderApp();
+          });
+        });
+
+        document.querySelectorAll('[data-open-angler]').forEach(card => {
+          card.addEventListener('click', () => openAnglerProfileDrawer(card.dataset.openAngler));
+        });
+      }
+
+      /* =========================================================
+         TAB 3: AUDIT LOG (INTEGRITY VIEW)
+      ========================================================= */
+      function renderAuditTab(ds) {
+        const anglerMap = new Map(ds.anglers.map(a => [a.id, a]));
+        const allCatches = ds.catches;
+        const activeCount = allCatches.filter(c => c.status !== 'voided').length;
+        const editedCount = allCatches.filter(c => c.status !== 'voided' && c.auditTrail && c.auditTrail.some(t => t.action === 'edited')).length;
+        const voidedCount = allCatches.filter(c => c.status === 'voided').length;
+
+        const q = uiState.auditSearch.trim().toLowerCase();
+        const filtered = allCatches
+          .filter(c => {
+            if (uiState.auditFilter === 'ACTIVE') return c.status !== 'voided';
+            if (uiState.auditFilter === 'EDITED') return c.auditTrail && c.auditTrail.some(t => t.action === 'edited');
+            if (uiState.auditFilter === 'VOIDED') return c.status === 'voided';
+            return true;
+          })
+          .filter(c => {
+            if (!q) return true;
+            const ang = anglerMap.get(c.anglerId);
+            const hay = [
+              formatLogId(c.seq),
+              ang ? ang.name : '',
+              ang ? ang.badge : '',
+              c.species || '',
+              c.notes || '',
+              c.voidReason || ''
+            ].join(' ').toLowerCase();
+            return hay.includes(q);
+          })
+          .sort((a, b) => {
+            const diff = (Date.parse(a.timestamp) || 0) - (Date.parse(b.timestamp) || 0);
+            return uiState.auditSort === 'desc' ? -diff : diff;
+          });
+
+        const listHtml = filtered.length === 0
+          ? `
+            <div class="empty-state">
+              <h3>${allCatches.length === 0 ? 'Audit Ledger Empty' : 'No Matching Entries'}</h3>
+              <p>${allCatches.length === 0 ? 'Every catch logged will appear here with exact measurements, timestamps, and marshal verification notes.' : 'Adjust your search or status filter to inspect other entries.'}</p>
+            </div>
+          `
+          : `<div class="list-stack">${filtered.map(c => renderAuditCard(c, anglerMap.get(c.anglerId), true)).join('')}</div>`;
+
+        return `
+          <div class="export-bar">
+            <button type="button" class="btn btn-dark" id="exportCsvBtn">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              <span>Export CSV</span>
+            </button>
+            <button type="button" class="btn btn-secondary" id="printSummaryBtn">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+              <span>Print Summary</span>
+            </button>
+          </div>
+
+          <div class="toolbar-row">
+            <div class="search-box">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              <input type="search" id="auditSearchInput" class="input-field search-input" placeholder="Search log, angler, species, note..." value="${escapeHtml(uiState.auditSearch)}" />
+            </div>
+            <button type="button" class="btn btn-secondary" id="auditSortBtn" title="Toggle chronological order">
+              ${uiState.auditSort === 'desc' ? 'Newest' : 'Oldest'}
+            </button>
+          </div>
+
+          <div class="filter-strip" aria-label="Audit status filter">
+            <button type="button" class="chip-btn ${uiState.auditFilter === 'ALL' ? 'active' : ''}" data-af="ALL">All (${allCatches.length})</button>
+            <button type="button" class="chip-btn ${uiState.auditFilter === 'ACTIVE' ? 'active' : ''}" data-af="ACTIVE">Active (${activeCount})</button>
+            <button type="button" class="chip-btn ${uiState.auditFilter === 'EDITED' ? 'active' : ''}" data-af="EDITED">Edited (${editedCount})</button>
+            <button type="button" class="chip-btn ${uiState.auditFilter === 'VOIDED' ? 'active' : ''}" data-af="VOIDED">Voided (${voidedCount})</button>
+          </div>
+
+          ${listHtml}
+        `;
+      }
+
+      function renderAuditCard(c, angler, showAnglerHeader) {
+        const isVoided = c.status === 'voided';
+        const edits = (c.auditTrail || []).filter(t => t.action === 'edited');
+        const isEdited = edits.length > 0;
+
+        let statusBadge = '<span class="status-pill status-active">Verified</span>';
+        if (isVoided) {
+          statusBadge = '<span class="status-pill status-voided">Voided · Excluded</span>';
+        } else if (isEdited) {
+          statusBadge = `<span class="status-pill status-edited">Edited (${edits.length})</span>`;
+        }
+
+        const trailHtml = (c.auditTrail && c.auditTrail.length > 0)
+          ? `
+            <div class="audit-trail-box ${isVoided ? 'void-box' : ''}">
+              ${c.auditTrail.map(t => {
+                if (t.action === 'voided') {
+                  return `
+                    <div class="audit-trail-item">
+                      <strong>VOIDED</strong> (${escapeHtml(formatDateTime(t.timestamp))}): ${escapeHtml(t.reason)}
+                    </div>
+                  `;
+                }
+                const prev = t.previous
+                  ? `Was ${formatLength(t.previous.lengthCm)} cm / ${formatWeight(t.previous.weightKg)} kg${t.previous.species ? ' · ' + escapeHtml(t.previous.species) : ''}`
+                  : '';
+                return `
+                  <div class="audit-trail-item">
+                    <strong>EDITED</strong> (${escapeHtml(formatDateTime(t.timestamp))}): ${escapeHtml(t.reason)}
+                    ${prev ? `<div style="margin-top:2px; opacity:0.85;">${prev}</div>` : ''}
+                  </div>
+                `;
+              }).join('')}
+            </div>
+          `
+          : '';
+
+        const anglerRowHtml = showAnglerHeader
+          ? `
+            <div class="audit-angler-row">
+              <button type="button" class="audit-angler-btn" data-jump-angler="${c.anglerId}">
+                <span>${escapeHtml(angler ? angler.name : 'Unknown Angler')}</span>
+                ${angler ? `<span class="badge-tag mono">#${escapeHtml(angler.badge)}</span>` : ''}
+              </button>
+              ${angler ? `<span class="div-pill ${(angler.division || '').toLowerCase() === 'junior' ? 'junior' : ''}">${escapeHtml(angler.division || 'Open')}</span>` : ''}
+            </div>
+          `
+          : '';
+
+        const actionsHtml = !isVoided
+          ? `
+            <div class="audit-actions">
+              <button type="button" class="btn btn-secondary btn-sm" data-edit-catch="${c.id}">Edit Entry</button>
+              <button type="button" class="btn btn-danger-outline btn-sm" data-void-catch="${c.id}">Void Entry</button>
+            </div>
+          `
+          : '';
+
+        return `
+          <article class="audit-card ${isVoided ? 'voided' : ''}">
+            <div class="audit-top">
+              <div class="audit-id-time">
+                <span class="log-id mono">${escapeHtml(formatLogId(c.seq))}</span>
+                <span class="tabular">${escapeHtml(formatDateTime(c.timestamp))}</span>
+              </div>
+              ${statusBadge}
+            </div>
+
+            <div class="audit-body ${isVoided ? 'struck' : ''}">
+              ${anglerRowHtml}
+              <div class="audit-metrics tabular">
+                <div>
+                  <div class="stat-cell-label">Length</div>
+                  <div class="stat-cell-val">${formatLength(c.lengthCm)} cm</div>
+                </div>
+                <div>
+                  <div class="stat-cell-label">Weight</div>
+                  <div class="stat-cell-val">${formatWeight(c.weightKg)} kg</div>
+                </div>
+                <div>
+                  <div class="stat-cell-label">Species</div>
+                  <div class="stat-cell-val" style="font-size:13.5px;">${escapeHtml(c.species || '—')}</div>
+                </div>
+              </div>
+              ${c.notes ? `<div class="audit-note">Marshal Note: ${escapeHtml(c.notes)}</div>` : ''}
+            </div>
+
+            ${trailHtml}
+            ${actionsHtml}
+          </article>
+        `;
+      }
+
+      function bindAuditEvents() {
+        const searchInput = document.getElementById('auditSearchInput');
+        if (searchInput) {
+          searchInput.addEventListener('input', e => {
+            uiState.auditSearch = e.target.value;
+            const pos = e.target.selectionStart;
+            renderApp();
+            const refreshed = document.getElementById('auditSearchInput');
+            if (refreshed) {
+              refreshed.focus();
+              refreshed.setSelectionRange(pos, pos);
+            }
+          });
+        }
+
+        const sortBtn = document.getElementById('auditSortBtn');
+        if (sortBtn) {
+          sortBtn.addEventListener('click', () => {
+            uiState.auditSort = uiState.auditSort === 'desc' ? 'asc' : 'desc';
+            renderApp();
+          });
+        }
+
+        document.querySelectorAll('[data-af]').forEach(btn => {
+          btn.addEventListener('click', () => {
+            uiState.auditFilter = btn.dataset.af;
+            renderApp();
+          });
+        });
+
+        const exportBtn = document.getElementById('exportCsvBtn');
+        if (exportBtn) exportBtn.addEventListener('click', exportCsvBackup);
+
+        const printBtn = document.getElementById('printSummaryBtn');
+        if (printBtn) printBtn.addEventListener('click', openPrintSummaryModal);
+
+        bindCatchCardActionButtons(document.getElementById('mainContent'));
+      }
+
+      function bindCatchCardActionButtons(container) {
+        if (!container) return;
+        container.querySelectorAll('[data-edit-catch]').forEach(btn => {
+          btn.addEventListener('click', e => {
+            e.stopPropagation();
+            openEditCatchModal(btn.dataset.editCatch);
+          });
+        });
+        container.querySelectorAll('[data-void-catch]').forEach(btn => {
+          btn.addEventListener('click', e => {
+            e.stopPropagation();
+            openVoidCatchModal(btn.dataset.voidCatch);
+          });
+        });
+        container.querySelectorAll('[data-jump-angler]').forEach(btn => {
+          btn.addEventListener('click', e => {
+            e.stopPropagation();
+            openAnglerProfileDrawer(btn.dataset.jumpAngler);
+          });
+        });
+      }
+
+      /* =========================================================
+         MODAL INFRASTRUCTURE
+      ========================================================= */
+      function openModal(html, onReady) {
+        stopLiveClock();
+        const backdrop = document.getElementById('modalBackdrop');
+        const sheet = document.getElementById('modalSheet');
+        sheet.innerHTML = html;
+        backdrop.classList.add('open');
+
+        sheet.querySelectorAll('[data-close-modal]').forEach(btn => {
+          btn.addEventListener('click', closeModal);
+        });
+
+        if (onReady) onReady(sheet);
+      }
+
+      function closeModal() {
+        stopLiveClock();
+        document.getElementById('modalBackdrop').classList.remove('open');
+        document.getElementById('modalSheet').innerHTML = '';
+      }
+
+      function stopLiveClock() {
+        if (uiState.liveClockTimer) {
+          clearInterval(uiState.liveClockTimer);
+          uiState.liveClockTimer = null;
+        }
+      }
+
+      /* =========================================================
+         DRAWER: CATEGORY FULL LEADERBOARD
+      ========================================================= */
+      function openCategoryDrawer(categoryId) {
+        const ds = getDataset();
+        const cat = CATEGORIES.find(c => c.id === categoryId);
+        if (!cat) return;
+
+        const computed = computeAllStats(ds, uiState.divisionFilter);
+        const lb = computed.leaderboards[categoryId];
+        const divTag = uiState.divisionFilter === 'ALL' ? 'All Divisions' : `${uiState.divisionFilter} Division`;
+
+        const rankedHtml = lb.entries.length === 0
+          ? `<div class="empty-state"><h3>No Qualifying Catches</h3><p>No active catches logged in this view yet.</p></div>`
+          : lb.entries.map(e => {
+              const placeClass = e.rank === 1 ? 'place-1' : (e.rank === 2 ? 'place-2' : '');
+              const badgeClass = e.rank === 1 ? 'rank-1' : (e.rank === 2 ? 'rank-2' : 'rank-other');
+              const rankText = e.rank === 1 ? '1ST' : (e.rank === 2 ? '2ND' : `#${e.rank}`);
+              return `
+                <button type="button" class="rank-list-item ${placeClass}" data-drawer-angler="${e.angler.id}">
+                  <div class="podium-left">
+                    <span class="rank-badge ${badgeClass}">${rankText}</span>
+                    <div class="podium-angler-info">
+                      <div class="podium-name-line">
+                        <span class="podium-angler-name">${escapeHtml(e.angler.name)}</span>
+                        <span class="badge-tag mono">#${escapeHtml(e.angler.badge)}</span>
+                        <span class="div-pill ${(e.angler.division || '').toLowerCase() === 'junior' ? 'junior' : ''}">${escapeHtml(e.angler.division || 'Open')}</span>
+                      </div>
+                      <div class="podium-meta">
+                        <span>${escapeHtml(e.meta)}</span>
+                        ${e.tieBreakerApplied ? `<span class="tb-badge">${escapeHtml(e.tieBreakerReason)}</span>` : ''}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="podium-score tabular">
+                    <span class="score-value" style="font-size:18px;">${escapeHtml(e.primaryDisplay)}</span><span class="score-unit">${escapeHtml(e.unit)}</span>
+                  </div>
+                </button>
+              `;
+            }).join('');
+
+        const unrankedHtml = lb.unranked.length > 0
+          ? `
+            <div style="margin-top:16px;">
+              <div style="font-size:12px; font-weight:800; color:#475569; text-transform:uppercase; letter-spacing:0.04em; margin-bottom:8px;">
+                Registered · No Active Catches (${lb.unranked.length})
+              </div>
+              ${lb.unranked.map(st => `
+                <button type="button" class="rank-list-item" style="opacity:0.75;" data-drawer-angler="${st.angler.id}">
+                  <div class="podium-left">
+                    <span class="rank-badge rank-other">—</span>
+                    <div class="podium-name-line">
+                      <span class="podium-angler-name">${escapeHtml(st.angler.name)}</span>
+                      <span class="badge-tag mono">#${escapeHtml(st.angler.badge)}</span>
+                    </div>
+                  </div>
+                  <span style="font-size:12.5px; font-weight:700; color:#475569;">0 fish</span>
+                </button>
+              `).join('')}
+            </div>
+          `
+          : '';
+
+        const html = `
+          <div class="sheet-header">
+            <div>
+              <h2 class="sheet-title">${escapeHtml(cat.title)}</h2>
+              <div class="sheet-subtitle">${escapeHtml(divTag)} · Tap any angler to audit catches</div>
+            </div>
+            <button type="button" class="close-btn" data-close-modal aria-label="Close">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+          </div>
+          <div class="sheet-body">
+            <div class="drawer-rule-box">
+              <div><strong>Rule:</strong> ${escapeHtml(cat.ruleDesc)}</div>
+              <div style="margin-top:3px;">${escapeHtml(cat.tieDesc)}</div>
+            </div>
+            ${rankedHtml}
+            ${unrankedHtml}
+          </div>
+        `;
+
+        openModal(html, sheet => {
+          sheet.querySelectorAll('[data-drawer-angler]').forEach(btn => {
+            btn.addEventListener('click', () => openAnglerProfileDrawer(btn.dataset.drawerAngler));
+          });
+        });
+      }
+
+      /* =========================================================
+         DRAWER: ANGLER PROFILE & INDIVIDUAL CATCH LOG
+      ========================================================= */
+      function openAnglerProfileDrawer(anglerId) {
+        const ds = getDataset();
+        const angler = ds.anglers.find(a => a.id === anglerId);
+        if (!angler) return;
+
+        const computed = computeAllStats(ds, 'ALL');
+        const st = computed.allAnglerStats.get(angler.id) || { count: 0, totalWeightKg: 0, totalLengthCm: 0 };
+        const pm = computed.podiumMap.get(angler.id) || { ranks: {} };
+
+        const anglerCatches = ds.catches
+          .filter(c => c.anglerId === angler.id)
+          .sort((a, b) => (Date.parse(b.timestamp) || 0) - (Date.parse(a.timestamp) || 0));
+
+        const voidedCount = anglerCatches.filter(c => c.status === 'voided').length;
+
+        const standingsHtml = CATEGORIES.map(cat => {
+          const r = pm.ranks[cat.id];
+          const isTop2 = r && r.rank <= 2;
+          return `
+            <div class="mini-standing-card ${isTop2 ? 'top-2' : ''}">
+              <div class="stat-cell-label">${escapeHtml(cat.shortTitle)}</div>
+              <div style="display:flex; align-items:baseline; justify-content:space-between; gap:4px; margin-top:3px;">
+                <strong class="tabular" style="font-size:14.5px;">${r ? (r.rank === 1 ? '1st' : r.rank === 2 ? '2nd' : '#' + r.rank) : '—'}</strong>
+                <span class="tabular" style="font-size:12.5px; font-weight:700; color:#334155;">${r ? escapeHtml(r.value) : 'No catch'}</span>
+              </div>
+              ${r && r.tb ? `<div style="margin-top:3px;"><span class="tb-badge">${escapeHtml(r.tb)}</span></div>` : ''}
+            </div>
+          `;
+        }).join('');
+
+        const catchesHtml = anglerCatches.length === 0
+          ? `<div class="empty-state"><h3>No Catches Logged</h3><p>Tap "+ Log Catch" below to record a fish for ${escapeHtml(angler.name)}.</p></div>`
+          : `<div class="list-stack">${anglerCatches.map(c => renderAuditCard(c, angler, false)).join('')}</div>`;
+
+        const html = `
+          <div class="sheet-header">
+            <div>
+              <h2 class="sheet-title">${escapeHtml(angler.name)}</h2>
+              <div class="sheet-subtitle">Badge #${escapeHtml(angler.badge)} · ${escapeHtml(angler.division || 'Open')} Division</div>
+            </div>
+            <button type="button" class="close-btn" data-close-modal aria-label="Close">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+          </div>
+          <div class="sheet-body">
+            <div class="angler-stats-grid tabular" style="margin-bottom:10px; background:#0F172A; color:#FFFFFF; border-color:#0F172A;">
+              <div>
+                <div class="stat-cell-label" style="color:#94A3B8;">Active Fish</div>
+                <div class="stat-cell-val" style="color:#FFFFFF; font-size:18px;">${st.count}</div>
+              </div>
+              <div>
+                <div class="stat-cell-label" style="color:#94A3B8;">Combined Wt</div>
+                <div class="stat-cell-val" style="color:#FFFFFF; font-size:18px;">${formatWeight(st.totalWeightKg)} kg</div>
+              </div>
+              <div>
+                <div class="stat-cell-label" style="color:#94A3B8;">Combined Len</div>
+                <div class="stat-cell-val" style="color:#FFFFFF; font-size:18px;">${formatLength(st.totalLengthCm)} cm</div>
+              </div>
+            </div>
+            <div style="font-size:12px; font-weight:600; color:#475569; margin-bottom:12px;">
+              Totals computed from ${st.count} verified ${st.count === 1 ? 'catch' : 'catches'}${voidedCount > 0 ? ` (${voidedCount} voided excluded)` : ''}.
+            </div>
+
+            <div style="font-size:12px; font-weight:800; color:#475569; text-transform:uppercase; letter-spacing:0.04em; margin-bottom:8px;">
+              Overall Category Standings
+            </div>
+            <div class="mini-standings">${standingsHtml}</div>
+
+            <div style="font-size:12px; font-weight:800; color:#475569; text-transform:uppercase; letter-spacing:0.04em; margin-bottom:8px;">
+              Individual Catch Audit Log (${anglerCatches.length})
+            </div>
+            ${catchesHtml}
+          </div>
+          <div class="sheet-footer">
+            <button type="button" class="btn btn-secondary" id="editAnglerFromProfile">Edit Angler</button>
+            <button type="button" class="btn btn-primary" style="flex:1;" id="logCatchForAngler">+ Log Catch</button>
+          </div>
+        `;
+
+        openModal(html, sheet => {
+          bindCatchCardActionButtons(sheet);
+          sheet.querySelector('#editAnglerFromProfile').addEventListener('click', () => openAnglerFormModal(angler.id));
+          sheet.querySelector('#logCatchForAngler').addEventListener('click', () => openLogCatchModal(angler.id));
+        });
+      }
+
+      /* =========================================================
+         MODAL: FAST-ENTRY CATCH LOGGING
+      ========================================================= */
+      function getSpeciesSuggestions(ds) {
+        const set = new Set(DEFAULT_SPECIES);
+        ds.catches.forEach(c => {
+          if (c.species && c.species.trim()) set.add(c.species.trim());
+        });
+        return Array.from(set).slice(0, 12);
+      }
+
+      function openLogCatchModal(preselectedAnglerId) {
+        const ds = getDataset();
+        let selectedAngler = preselectedAnglerId
+          ? ds.anglers.find(a => a.id === preselectedAnglerId) || null
+          : null;
+
+        const speciesList = getSpeciesSuggestions(ds);
+
+        const html = `
+          <div class="sheet-header">
+            <div>
+              <h2 class="sheet-title">Log Catch</h2>
+              <div class="sheet-subtitle">Fast weigh-in &amp; brag-mat entry</div>
+            </div>
+            <button type="button" class="close-btn" data-close-modal aria-label="Close">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+          </div>
+          <form id="logCatchForm" class="sheet-body" novalidate>
+            <div id="catchFormError" class="error-msg"></div>
+
+            <div class="form-group">
+              <label class="form-label" for="anglerComboInput">
+                <span>Angler <span class="label-req">*</span></span>
+                <span class="label-opt">Search name or badge #</span>
+              </label>
+              <div class="combo-wrap">
+                <input type="text" id="anglerComboInput" class="input-field" placeholder="Tap to search angler..." autocomplete="off" value="${selectedAngler ? escapeHtml(selectedAngler.name + ' (#' + selectedAngler.badge + ')') : ''}" />
+                <div id="anglerComboDropdown" class="combo-dropdown"></div>
+              </div>
+              <div id="selectedAnglerChip"></div>
+            </div>
+
+            <div class="two-col">
+              <div class="form-group">
+                <label class="form-label" for="catchLengthInput">
+                  <span>Length (cm) <span class="label-req">*</span></span>
+                </label>
+                <input type="number" id="catchLengthInput" class="input-field big-num-input" inputmode="decimal" step="0.1" min="0.1" placeholder="e.g. 64.5" required />
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="catchWeightInput">
+                  <span>Weight (kg) <span class="label-req">*</span></span>
+                </label>
+                <input type="number" id="catchWeightInput" class="input-field big-num-input" inputmode="decimal" step="0.01" min="0.01" placeholder="e.g. 3.45" required />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="catchSpeciesInput">
+                <span>Species</span>
+                <span class="label-opt">Optional</span>
+              </label>
+              <input type="text" id="catchSpeciesInput" class="input-field" placeholder="Type or pick species below..." autocomplete="off" />
+              <div class="preset-chips" id="speciesChips">
+                ${speciesList.map(sp => `<button type="button" class="preset-chip" data-species="${escapeHtml(sp)}">${escapeHtml(sp)}</button>`).join('')}
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="catchNotesInput">
+                <span>Verification Notes / Photo Ref ID</span>
+                <span class="label-opt">Optional</span>
+              </label>
+              <input type="text" id="catchNotesInput" class="input-field" placeholder="e.g. Marshal JM • Mat Photo #042" />
+            </div>
+
+            <div class="timestamp-preview">
+              <span>Timestamp (auto-captured on submit)</span>
+              <span class="mono" id="liveTimestampClock">${formatTime(new Date().toISOString())}</span>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block" style="min-height:54px; font-size:16px;">
+              Save Verified Catch
+            </button>
+          </form>
+        `;
+
+        openModal(html, sheet => {
+          const comboInput = sheet.querySelector('#anglerComboInput');
+          const dropdown = sheet.querySelector('#anglerComboDropdown');
+          const chipSlot = sheet.querySelector('#selectedAnglerChip');
+          const errBox = sheet.querySelector('#catchFormError');
+          const lengthInput = sheet.querySelector('#catchLengthInput');
+          const weightInput = sheet.querySelector('#catchWeightInput');
+          const speciesInput = sheet.querySelector('#catchSpeciesInput');
+          const notesInput = sheet.querySelector('#catchNotesInput');
+
+          function renderSelectedChip() {
+            if (!selectedAngler) {
+              chipSlot.innerHTML = '';
+              return;
+            }
+            chipSlot.innerHTML = `
+              <div class="selected-angler-pill">
+                <span>Selected: ${escapeHtml(selectedAngler.name)} (#${escapeHtml(selectedAngler.badge)} · ${escapeHtml(selectedAngler.division || 'Open')})</span>
+                <button type="button" id="clearSelectedAngler" style="background:none;border:none;color:#0C4A6E;font-weight:900;cursor:pointer;padding:2px 6px;">Change</button>
+              </div>
+            `;
+            chipSlot.querySelector('#clearSelectedAngler').addEventListener('click', () => {
+              selectedAngler = null;
+              comboInput.value = '';
+              renderSelectedChip();
+              comboInput.focus();
+              renderDropdown('');
+              dropdown.classList.add('open');
+            });
+          }
+
+          function renderDropdown(filterText) {
+            const q = filterText.trim().toLowerCase();
+            const matches = ds.anglers.filter(a => {
+              if (!q) return true;
+              return (
+                a.name.toLowerCase().includes(q) ||
+                a.badge.toLowerCase().includes(q) ||
+                (a.division || '').toLowerCase().includes(q)
+              );
+            });
+
+            let out = matches.map(a => `
+              <button type="button" class="combo-option ${selectedAngler && selectedAngler.id === a.id ? 'selected' : ''}" data-pick-angler="${a.id}">
+                <span>${escapeHtml(a.name)}</span>
+                <span class="badge-tag mono">#${escapeHtml(a.badge)} · ${escapeHtml(a.division || 'Open')}</span>
+              </button>
+            `).join('');
+
+            if (matches.length === 0) {
+              out += `<div style="padding:12px; font-size:13px; color:#475569; font-weight:600;">No registered anglers match "${escapeHtml(filterText)}".</div>`;
+            }
+
+            out += `<button type="button" class="combo-option combo-add-new" data-quick-register="true">+ Register New Angler</button>`;
+            dropdown.innerHTML = out;
+
+            dropdown.querySelectorAll('[data-pick-angler]').forEach(opt => {
+              opt.addEventListener('mousedown', e => {
+                e.preventDefault();
+                selectedAngler = ds.anglers.find(a => a.id === opt.dataset.pickAngler) || null;
+                if (selectedAngler) {
+                  comboInput.value = `${selectedAngler.name} (#${selectedAngler.badge})`;
+                  renderSelectedChip();
+                }
+                dropdown.classList.remove('open');
+                lengthInput.focus();
+              });
+            });
+
+            const quickReg = dropdown.querySelector('[data-quick-register]');
+            if (quickReg) {
+              quickReg.addEventListener('mousedown', e => {
+                e.preventDefault();
+                openAnglerFormModal(null, newAngler => {
+                  openLogCatchModal(newAngler.id);
+                });
+              });
+            }
+          }
+
+          renderSelectedChip();
+
+          comboInput.addEventListener('focus', () => {
+            renderDropdown(selectedAngler ? '' : comboInput.value);
+            dropdown.classList.add('open');
+          });
+
+          comboInput.addEventListener('input', () => {
+            selectedAngler = null;
+            renderSelectedChip();
+            renderDropdown(comboInput.value);
+            dropdown.classList.add('open');
+          });
+
+          comboInput.addEventListener('blur', () => {
+            setTimeout(() => dropdown.classList.remove('open'), 150);
+          });
+
+          sheet.querySelectorAll('[data-species]').forEach(chip => {
+            chip.addEventListener('click', () => {
+              speciesInput.value = chip.dataset.species;
+              sheet.querySelectorAll('[data-species]').forEach(c => c.classList.remove('selected'));
+              chip.classList.add('selected');
+            });
+          });
+
+          uiState.liveClockTimer = setInterval(() => {
+            const clockEl = document.getElementById('liveTimestampClock');
+            if (clockEl) clockEl.textContent = formatTime(new Date().toISOString());
+          }, 1000);
+
+          if (selectedAngler) {
+            setTimeout(() => lengthInput.focus(), 60);
+          }
+
+          sheet.querySelector('#logCatchForm').addEventListener('submit', e => {
+            e.preventDefault();
+            errBox.classList.remove('visible');
+
+            if (!selectedAngler) {
+              errBox.textContent = 'Please select a registered angler from the dropdown.';
+              errBox.classList.add('visible');
+              comboInput.focus();
+              return;
+            }
+
+            const lengthVal = parseFloat(lengthInput.value);
+            const weightVal = parseFloat(weightInput.value);
+
+            if (!Number.isFinite(lengthVal) || lengthVal <= 0) {
+              errBox.textContent = 'Enter a valid positive length in cm (decimals supported).';
+              errBox.classList.add('visible');
+              lengthInput.focus();
+              return;
+            }
+
+            if (!Number.isFinite(weightVal) || weightVal <= 0) {
+              errBox.textContent = 'Enter a valid positive weight in kg (decimals supported).';
+              errBox.classList.add('visible');
+              weightInput.focus();
+              return;
+            }
+
+            const newCatch = {
+              id: generateId('c'),
+              seq: ds.nextSeq++,
+              anglerId: selectedAngler.id,
+              species: speciesInput.value.trim(),
+              lengthCm: roundTo(lengthVal, 2),
+              weightKg: roundTo(weightVal, 3),
+              timestamp: new Date().toISOString(),
+              notes: notesInput.value.trim(),
+              status: 'active',
+              auditTrail: []
+            };
+
+            ds.catches.push(newCatch);
+            saveStore();
+            closeModal();
+            renderApp();
+            showToast(`Logged ${formatLogId(newCatch.seq)} for ${selectedAngler.name} (${formatLength(newCatch.lengthCm)} cm / ${formatWeight(newCatch.weightKg)} kg)`);
+          });
+        });
+      }
+
+      /* =========================================================
+         MODAL: REGISTER / EDIT ANGLER
+      ========================================================= */
+      function suggestNextBadge(ds) {
+        let maxNum = 100;
+        ds.anglers.forEach(a => {
+          const m = String(a.badge).match(/\d+/);
+          if (m) {
+            const n = parseInt(m[0], 10);
+            if (n > maxNum) maxNum = n;
+          }
+        });
+        return String(maxNum + 1);
+      }
+
+      function openAnglerFormModal(editAnglerId, onCreatedCallback) {
+        const ds = getDataset();
+        const existing = editAnglerId ? ds.anglers.find(a => a.id === editAnglerId) : null;
+        const defaultBadge = existing ? existing.badge : suggestNextBadge(ds);
+        const currentDiv = existing ? existing.division : 'Senior';
+
+        const html = `
+          <div class="sheet-header">
+            <div>
+              <h2 class="sheet-title">${existing ? 'Edit Angler' : 'Register Angler'}</h2>
+              <div class="sheet-subtitle">${existing ? 'Update competitor badge or division' : 'Quick competitor check-in'}</div>
+            </div>
+            <button type="button" class="close-btn" data-close-modal aria-label="Close">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+          </div>
+          <form id="anglerForm" class="sheet-body" novalidate>
+            <div id="anglerFormError" class="error-msg"></div>
+
+            <div class="form-group">
+              <label class="form-label" for="anglerNameInput">
+                <span>Angler Full Name <span class="label-req">*</span></span>
+              </label>
+              <input type="text" id="anglerNameInput" class="input-field" placeholder="e.g. Jordan Reid" value="${existing ? escapeHtml(existing.name) : ''}" required />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="anglerBadgeInput">
+                <span>Angler ID / Badge Number <span class="label-req">*</span></span>
+                <span class="label-opt">Unique ID</span>
+              </label>
+              <input type="text" id="anglerBadgeInput" class="input-field mono" placeholder="e.g. 109" value="${escapeHtml(defaultBadge)}" required />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="anglerDivisionInput">
+                <span>Category / Division <span class="label-req">*</span></span>
+              </label>
+              <input type="text" id="anglerDivisionInput" class="input-field" value="${escapeHtml(currentDiv)}" placeholder="Senior, Junior, Ladies..." required />
+              <div class="preset-chips">
+                ${DEFAULT_DIVISIONS.map(d => `<button type="button" class="preset-chip ${d === currentDiv ? 'selected' : ''}" data-pick-div="${escapeHtml(d)}">${escapeHtml(d)}</button>`).join('')}
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block" style="min-height:52px; font-size:15.5px;">
+              ${existing ? 'Save Angler Changes' : 'Register Angler'}
+            </button>
+          </form>
+        `;
+
+        openModal(html, sheet => {
+          const nameInput = sheet.querySelector('#anglerNameInput');
+          const badgeInput = sheet.querySelector('#anglerBadgeInput');
+          const divInput = sheet.querySelector('#anglerDivisionInput');
+          const errBox = sheet.querySelector('#anglerFormError');
+
+          setTimeout(() => nameInput.focus(), 60);
+
+          sheet.querySelectorAll('[data-pick-div]').forEach(chip => {
+            chip.addEventListener('click', () => {
+              divInput.value = chip.dataset.pickDiv;
+              sheet.querySelectorAll('[data-pick-div]').forEach(c => c.classList.remove('selected'));
+              chip.classList.add('selected');
+            });
+          });
+
+          sheet.querySelector('#anglerForm').addEventListener('submit', e => {
+            e.preventDefault();
+            errBox.classList.remove('visible');
+
+            const name = nameInput.value.trim();
+            const badge = badgeInput.value.trim().replace(/^#/, '');
+            const division = divInput.value.trim() || 'Open';
+
+            if (!name) {
+              errBox.textContent = 'Please enter the angler name.';
+              errBox.classList.add('visible');
+              nameInput.focus();
+              return;
+            }
+            if (!badge) {
+              errBox.textContent = 'Please enter a badge or ID number.';
+              errBox.classList.add('visible');
+              badgeInput.focus();
+              return;
+            }
+
+            const duplicate = ds.anglers.find(
+              a => a.badge.toLowerCase() === badge.toLowerCase() && (!existing || a.id !== existing.id)
+            );
+            if (duplicate) {
+              errBox.textContent = `Badge #${badge} is already assigned to ${duplicate.name}.`;
+              errBox.classList.add('visible');
+              badgeInput.focus();
+              return;
+            }
+
+            if (existing) {
+              existing.name = name;
+              existing.badge = badge;
+              existing.division = division;
+              saveStore();
+              closeModal();
+              renderApp();
+              showToast(`Updated ${name} (#${badge})`);
+            } else {
+              const created = {
+                id: generateId('ang'),
+                name,
+                badge,
+                division,
+                createdAt: new Date().toISOString()
+              };
+              ds.anglers.push(created);
+              saveStore();
+              closeModal();
+              renderApp();
+              showToast(`Registered ${name} (#${badge} · ${division})`);
+              if (onCreatedCallback) onCreatedCallback(created);
+            }
+          });
+        });
+      }
+
+      /* =========================================================
+         MODAL: EDIT CATCH (WITH MANDATORY AUDIT REASON)
+      ========================================================= */
+      function openEditCatchModal(catchId) {
+        const ds = getDataset();
+        const entry = ds.catches.find(c => c.id === catchId);
+        if (!entry || entry.status === 'voided') return;
+
+        const anglerOptions = ds.anglers.map(a => `
+          <option value="${a.id}" ${a.id === entry.anglerId ? 'selected' : ''}>
+            ${escapeHtml(a.name)} (#${escapeHtml(a.badge)} · ${escapeHtml(a.division || 'Open')})
+          </option>
+        `).join('');
+
+        const html = `
+          <div class="sheet-header">
+            <div>
+              <h2 class="sheet-title">Edit ${escapeHtml(formatLogId(entry.seq))}</h2>
+              <div class="sheet-subtitle">Audit-protected change — reason required</div>
+            </div>
+            <button type="button" class="close-btn" data-close-modal aria-label="Close">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+          </div>
+          <form id="editCatchForm" class="sheet-body" novalidate>
+            <div id="editCatchError" class="error-msg"></div>
+
+            <div class="form-group">
+              <label class="form-label" for="editAnglerSelect"><span>Angler <span class="label-req">*</span></span></label>
+              <select id="editAnglerSelect" class="input-field">${anglerOptions}</select>
+            </div>
+
+            <div class="two-col">
+              <div class="form-group">
+                <label class="form-label" for="editLengthInput"><span>Length (cm) <span class="label-req">*</span></span></label>
+                <input type="number" id="editLengthInput" class="input-field big-num-input" inputmode="decimal" step="0.1" min="0.1" value="${entry.lengthCm}" required />
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="editWeightInput"><span>Weight (kg) <span class="label-req">*</span></span></label>
+                <input type="number" id="editWeightInput" class="input-field big-num-input" inputmode="decimal" step="0.01" min="0.01" value="${entry.weightKg}" required />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="editSpeciesInput"><span>Species</span></label>
+              <input type="text" id="editSpeciesInput" class="input-field" value="${escapeHtml(entry.species || '')}" />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="editNotesInput"><span>Verification Notes / Photo Ref</span></label>
+              <input type="text" id="editNotesInput" class="input-field" value="${escapeHtml(entry.notes || '')}" />
+            </div>
+
+            <div class="form-group" style="background:#FEF3C7; border:1.5px solid #F59E0B; border-radius:12px; padding:12px;">
+              <label class="form-label" for="editReasonInput" style="color:#78350F;">
+                <span>Reason for Edit <span class="label-req">*</span></span>
+                <span class="label-opt" style="color:#92400E;">Logged in audit trail</span>
+              </label>
+              <input type="text" id="editReasonInput" class="input-field" placeholder="Explain why this entry is being corrected..." required />
+              <div class="preset-chips">
+                ${EDIT_REASONS.map(r => `<button type="button" class="preset-chip" data-edit-reason="${escapeHtml(r)}">${escapeHtml(r)}</button>`).join('')}
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block" style="min-height:52px;">
+              Save Corrected Entry
+            </button>
+          </form>
+        `;
+
+        openModal(html, sheet => {
+          const reasonInput = sheet.querySelector('#editReasonInput');
+          const errBox = sheet.querySelector('#editCatchError');
+
+          sheet.querySelectorAll('[data-edit-reason]').forEach(chip => {
+            chip.addEventListener('click', () => {
+              reasonInput.value = chip.dataset.editReason;
+            });
+          });
+
+          sheet.querySelector('#editCatchForm').addEventListener('submit', e => {
+            e.preventDefault();
+            errBox.classList.remove('visible');
+
+            const newAnglerId = sheet.querySelector('#editAnglerSelect').value;
+            const newLen = parseFloat(sheet.querySelector('#editLengthInput').value);
+            const newWt = parseFloat(sheet.querySelector('#editWeightInput').value);
+            const newSpecies = sheet.querySelector('#editSpeciesInput').value.trim();
+            const newNotes = sheet.querySelector('#editNotesInput').value.trim();
+            const reason = reasonInput.value.trim();
+
+            if (!Number.isFinite(newLen) || newLen <= 0 || !Number.isFinite(newWt) || newWt <= 0) {
+              errBox.textContent = 'Length and Weight must both be valid positive numbers.';
+              errBox.classList.add('visible');
+              return;
+            }
+            if (reason.length < 3) {
+              errBox.textContent = 'A brief Reason for Edit (at least 3 characters) is required for integrity logging.';
+              errBox.classList.add('visible');
+              reasonInput.focus();
+              return;
+            }
+
+            if (!entry.auditTrail) entry.auditTrail = [];
+            entry.auditTrail.push({
+              action: 'edited',
+              timestamp: new Date().toISOString(),
+              reason,
+              previous: {
+                anglerId: entry.anglerId,
+                species: entry.species,
+                lengthCm: entry.lengthCm,
+                weightKg: entry.weightKg,
+                notes: entry.notes
+              }
+            });
+
+            entry.anglerId = newAnglerId;
+            entry.lengthCm = roundTo(newLen, 2);
+            entry.weightKg = roundTo(newWt, 3);
+            entry.species = newSpecies;
+            entry.notes = newNotes;
+
+            saveStore();
+            closeModal();
+            renderApp();
+            showToast(`Updated ${formatLogId(entry.seq)} & recorded audit reason`);
+          });
+        });
+      }
+
+      /* =========================================================
+         MODAL: VOID CATCH (WITH MANDATORY AUDIT REASON)
+      ========================================================= */
+      function openVoidCatchModal(catchId) {
+        const ds = getDataset();
+        const entry = ds.catches.find(c => c.id === catchId);
+        if (!entry || entry.status === 'voided') return;
+        const angler = ds.anglers.find(a => a.id === entry.anglerId);
+
+        const html = `
+          <div class="sheet-header" style="background:#FEF2F2;">
+            <div>
+              <h2 class="sheet-title" style="color:#991B1B;">Void ${escapeHtml(formatLogId(entry.seq))}</h2>
+              <div class="sheet-subtitle" style="color:#991B1B;">Struck through in audit log &amp; excluded from all scores</div>
+            </div>
+            <button type="button" class="close-btn" data-close-modal aria-label="Close">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+          </div>
+          <form id="voidCatchForm" class="sheet-body" novalidate>
+            <div id="voidCatchError" class="error-msg"></div>
+
+            <div class="drawer-rule-box" style="background:#FFF5F5; border-color:#FCA5A5;">
+              <div style="font-weight:800; color:#0F172A;">
+                ${escapeHtml(angler ? angler.name : 'Unknown')} ${angler ? `(Badge #${escapeHtml(angler.badge)})` : ''}
+              </div>
+              <div class="tabular" style="margin-top:4px; color:#334155;">
+                ${formatLength(entry.lengthCm)} cm · ${formatWeight(entry.weightKg)} kg · ${escapeHtml(entry.species || 'Unlisted')} · ${escapeHtml(formatDateTime(entry.timestamp))}
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="voidReasonInput">
+                <span>Reason for Voiding <span class="label-req">*</span></span>
+                <span class="label-opt">Required</span>
+              </label>
+              <input type="text" id="voidReasonInput" class="input-field" placeholder="State marshal reason for voiding this catch..." required />
+              <div class="preset-chips">
+                ${VOID_REASONS.map(r => `<button type="button" class="preset-chip" data-void-reason="${escapeHtml(r)}">${escapeHtml(r)}</button>`).join('')}
+              </div>
+            </div>
+
+            <div style="display:flex; gap:8px;">
+              <button type="button" class="btn btn-secondary" data-close-modal style="flex:1;">Cancel</button>
+              <button type="submit" class="btn btn-danger" style="flex:1.4; min-height:52px;">Confirm Void Entry</button>
+            </div>
+          </form>
+        `;
+
+        openModal(html, sheet => {
+          const reasonInput = sheet.querySelector('#voidReasonInput');
+          const errBox = sheet.querySelector('#voidCatchError');
+          setTimeout(() => reasonInput.focus(), 60);
+
+          sheet.querySelectorAll('[data-void-reason]').forEach(chip => {
+            chip.addEventListener('click', () => {
+              reasonInput.value = chip.dataset.voidReason;
+            });
+          });
+
+          sheet.querySelector('#voidCatchForm').addEventListener('submit', e => {
+            e.preventDefault();
+            errBox.classList.remove('visible');
+
+            const reason = reasonInput.value.trim();
+            if (reason.length < 3) {
+              errBox.textContent = 'Please provide a brief Reason for Void (at least 3 characters).';
+              errBox.classList.add('visible');
+              reasonInput.focus();
+              return;
+            }
+
+            const nowIso = new Date().toISOString();
+            entry.status = 'voided';
+            entry.voidReason = reason;
+            entry.voidedAt = nowIso;
+            if (!entry.auditTrail) entry.auditTrail = [];
+            entry.auditTrail.push({
+              action: 'voided',
+              timestamp: nowIso,
+              reason
+            });
+
+            saveStore();
+            closeModal();
+            renderApp();
+            showToast(`Voided ${formatLogId(entry.seq)} — excluded from standings`);
+          });
+        });
+      }
+
+      /* =========================================================
+         CSV EXPORT & PRINT SUMMARY
+      ========================================================= */
+      function csvCell(val) {
+        let s = val == null ? '' : String(val);
+        if (/^[=+\-@]/.test(s)) s = "'" + s;
+        if (/[",\r\n]/.test(s)) {
+          return '"' + s.replace(/"/g, '""') + '"';
+        }
+        return s;
+      }
+
+      function generateCsvContent(ds) {
+        const computed = computeAllStats(ds, 'ALL');
+        const anglerMap = new Map(ds.anglers.map(a => [a.id, a]));
+        const lines = [];
+
+        lines.push(['TOURNAMENT SUMMARY', ds.competitionName, 'Exported At', new Date().toISOString()].map(csvCell).join(','));
+        lines.push('');
+        lines.push(['Category', 'Place', 'Angler Name', 'Badge #', 'Division', 'Result', 'Unit', 'Tie-Breaker Applied', 'Tie-Breaker Detail'].map(csvCell).join(','));
+
+        CATEGORIES.forEach(cat => {
+          const lb = computed.leaderboards[cat.id];
+          lb.entries.forEach(e => {
+            lines.push([
+              cat.title,
+              e.rank,
+              e.angler.name,
+              e.angler.badge,
+              e.angler.division || 'Open',
+              e.primaryDisplay,
+              e.unit,
+              e.tieBreakerApplied ? 'YES' : 'NO',
+              e.tieBreakerReason || ''
+            ].map(csvCell).join(','));
+          });
+        });
+
+        lines.push('');
+        lines.push(['RAW CATCH AUDIT LEDGER'].map(csvCell).join(','));
+        lines.push(['Log ID', 'Status', 'Timestamp (ISO)', 'Angler Name', 'Badge #', 'Division', 'Species', 'Length (cm)', 'Weight (kg)', 'Verification Notes', 'Audit Trail (Edits/Void Reasons)'].map(csvCell).join(','));
+
+        const chronological = [...ds.catches].sort((a, b) => a.seq - b.seq);
+        chronological.forEach(c => {
+          const ang = anglerMap.get(c.anglerId);
+          const trailSummary = (c.auditTrail || []).map(t => `${t.action.toUpperCase()}@${t.timestamp}: ${t.reason}`).join(' | ');
+          lines.push([
+            formatLogId(c.seq),
+            c.status === 'voided' ? 'VOIDED' : 'ACTIVE',
+            c.timestamp,
+            ang ? ang.name : 'Unknown',
+            ang ? ang.badge : '',
+            ang ? (ang.division || 'Open') : '',
+            c.species || '',
+            formatLength(c.lengthCm),
+            formatWeight(c.weightKg),
+            c.notes || '',
+            trailSummary
+          ].map(csvCell).join(','));
+        });
+
+        return lines.join('\r\n');
+      }
+
+      function exportCsvBackup() {
+        const ds = getDataset();
+        const csv = generateCsvContent(ds);
+        const safeName = (ds.competitionName || 'fishing_comp').toLowerCase().replace(/[^a-z0-9]+/g, '_');
+        const filename = `${safeName}_audit_standings.csv`;
+
+        try {
+          const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = filename;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          setTimeout(() => URL.revokeObjectURL(url), 1000);
+          showToast(`Exported ${filename}`);
+        } catch (err) {
+          if (navigator.clipboard) {
+            navigator.clipboard.writeText(csv);
+            showToast('CSV copied to clipboard');
+          }
+        }
+      }
+
+      function buildPrintReportHtml(ds) {
+        const computed = computeAllStats(ds, 'ALL');
+        const anglerMap = new Map(ds.anglers.map(a => [a.id, a]));
+        const activeCount = ds.catches.filter(c => c.status !== 'voided').length;
+        const voidCount = ds.catches.length - activeCount;
+
+        const podiumRows = CATEGORIES.map(cat => {
+          const lb = computed.leaderboards[cat.id];
+          const p1 = lb.entries[0];
+          const p2 = lb.entries[1];
+          return `
+            <tr>
+              <td><strong>${escapeHtml(cat.title)}</strong></td>
+              <td>${p1 ? `${escapeHtml(p1.angler.name)} (#${escapeHtml(p1.angler.badge)}) — <strong>${escapeHtml(p1.primaryDisplay)} ${escapeHtml(p1.unit)}</strong>${p1.tieBreakerApplied ? ` [${escapeHtml(p1.tieBreakerReason)}]` : ''}` : '—'}</td>
+              <td>${p2 ? `${escapeHtml(p2.angler.name)} (#${escapeHtml(p2.angler.badge)}) — <strong>${escapeHtml(p2.primaryDisplay)} ${escapeHtml(p2.unit)}</strong>${p2.tieBreakerApplied ? ` [${escapeHtml(p2.tieBreakerReason)}]` : ''}` : '—'}</td>
+            </tr>
+          `;
+        }).join('');
+
+        const auditRows = [...ds.catches]
+          .sort((a, b) => a.seq - b.seq)
+          .map(c => {
+            const ang = anglerMap.get(c.anglerId);
+            const isVoid = c.status === 'voided';
+            const auditText = (c.auditTrail || []).map(t => `${t.action.toUpperCase()}: ${t.reason}`).join('; ');
+            return `
+              <tr class="${isVoid ? 'print-void-row' : ''}">
+                <td class="mono">${escapeHtml(formatLogId(c.seq))}</td>
+                <td class="tabular">${escapeHtml(formatDateTime(c.timestamp))}</td>
+                <td>${escapeHtml(ang ? `${ang.name} (#${ang.badge})` : 'Unknown')}</td>
+                <td>${escapeHtml(c.species || '—')}</td>
+                <td class="tabular">${formatLength(c.lengthCm)} cm</td>
+                <td class="tabular">${formatWeight(c.weightKg)} kg</td>
+                <td>${isVoid ? 'VOIDED' : 'ACTIVE'}</td>
+                <td>${escapeHtml([c.notes, auditText].filter(Boolean).join(' | ') || '—')}</td>
+              </tr>
+            `;
+          }).join('');
+
+        return `
+          <div class="print-doc">
+            <h2 style="margin:0 0 4px 0; font-size:18px;">${escapeHtml(ds.competitionName)} — Official Standings &amp; Audit Ledger</h2>
+            <div style="font-size:12px; color:#475569; margin-bottom:14px;">
+              Generated ${escapeHtml(new Date().toLocaleString())} · ${ds.anglers.length} Anglers · ${activeCount} Active Catches · ${voidCount} Voided
+            </div>
+
+            <h3 style="margin:0 0 6px 0; font-size:14px;">Award Category Standings (1st &amp; Runner-Up)</h3>
+            <table class="print-table">
+              <thead>
+                <tr>
+                  <th>Category</th>
+                  <th>1st Place Winner</th>
+                  <th>2nd Place Runner-Up</th>
+                </tr>
+              </thead>
+              <tbody>${podiumRows}</tbody>
+            </table>
+
+            <h3 style="margin:0 0 6px 0; font-size:14px;">Complete Chronological Audit Log</h3>
+            <table class="print-table">
+              <thead>
+                <tr>
+                  <th>Log ID</th>
+                  <th>Time</th>
+                  <th>Angler</th>
+                  <th>Species</th>
+                  <th>Length</th>
+                  <th>Weight</th>
+                  <th>Status</th>
+                  <th>Marshal Notes &amp; Audit Trail</th>
+                </tr>
+              </thead>
+              <tbody>${auditRows || '<tr><td colspan="8">No catches recorded.</td></tr>'}</tbody>
+            </table>
+          </div>
+        `;
+      }
+
+      function openPrintSummaryModal() {
+        const ds = getDataset();
+        const reportHtml = buildPrintReportHtml(ds);
+        document.getElementById('printRoot').innerHTML = reportHtml;
+
+        const html = `
+          <div class="sheet-header">
+            <div>
+              <h2 class="sheet-title">Official Standings &amp; Audit Report</h2>
+              <div class="sheet-subtitle">Print, save as PDF, or copy CSV backup</div>
+            </div>
+            <button type="button" class="close-btn" data-close-modal aria-label="Close">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+          </div>
+          <div class="sheet-body" style="overflow-x:auto;">
+            ${reportHtml}
+          </div>
+          <div class="sheet-footer">
+            <button type="button" class="btn btn-secondary" id="copyCsvFromReportBtn">Copy CSV</button>
+            <button type="button" class="btn btn-primary" style="flex:1;" id="triggerPrintBtn">Print / Save PDF</button>
+          </div>
+        `;
+
+        openModal(html, sheet => {
+          sheet.querySelector('#triggerPrintBtn').addEventListener('click', () => {
+            window.print();
+          });
+          sheet.querySelector('#copyCsvFromReportBtn').addEventListener('click', () => {
+            const csv = generateCsvContent(ds);
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+              navigator.clipboard.writeText(csv).then(() => showToast('Full CSV copied to clipboard'));
+            } else {
+              exportCsvBackup();
+            }
+          });
+        });
+      }
+
+      /* =========================================================
+         PWA BUNDLE DOWNLOADER & PURE-JS ZIP BUILDER
+      ========================================================= */
+      const PWA_EXTRA_FILES = {
+        'manifest.webmanifest': JSON.stringify({
+          name: 'TideLine — Fishing Competition Scorer',
+          short_name: 'TideLine',
+          description: 'Real-time mobile-first fishing competition scorer with automated 5-category leaderboards, tie-breakers, and transparent marshal audit log.',
+          start_url: './index.html',
+          scope: './',
+          display: 'standalone',
+          orientation: 'portrait-primary',
+          background_color: '#0F172A',
+          theme_color: '#0F172A',
+          icons: [{ src: './icon.svg', sizes: 'any', type: 'image/svg+xml', purpose: 'any maskable' }]
+        }, null, 2),
+        'sw.js': [
+          "const CACHE_NAME = 'tideline-scorer-v1';",
+          "const ASSETS = ['./', './index.html', './manifest.webmanifest', './icon.svg'];",
+          "self.addEventListener('install', e => { e.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll(ASSETS))); self.skipWaiting(); });",
+          "self.addEventListener('activate', e => { e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== CACHE_NAME).map(k => caches.delete(k))))); self.clients.claim(); });",
+          "self.addEventListener('fetch', e => { if (e.request.method !== 'GET') return; e.respondWith(caches.match(e.request).then(cached => cached || fetch(e.request).then(res => { if (res && res.status === 200 && res.type === 'basic') { const cp = res.clone(); caches.open(CACHE_NAME).then(c => c.put(e.request, cp)); } return res; }).catch(() => caches.match('./index.html')))); });"
+        ].join('\n'),
+        'icon.svg': '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><rect width="512" height="512" rx="112" fill="#0F172A"/><rect x="40" y="40" width="432" height="432" rx="84" fill="#0369A1"/><g fill="none" stroke="#FFFFFF" stroke-width="28" stroke-linecap="round" stroke-linejoin="round" transform="translate(86 86) scale(14.16)"><path d="M6.5 12c.94-3.46 4.94-6 8.5-6 3.56 0 6.06 2.54 7 6-.94 3.47-3.44 6-7 6-3.56 0-7.56-2.53-8.5-6Z"/><path d="M18 12v.5"/><path d="M16 17.93a9.77 9.77 0 0 1 0-11.86"/><path d="M7 10.67C7 8 5.58 5.97 2.73 5.5c-1 1.5-1 5 .23 6.5-1.24 1.5-1.24 5-.23 6.5C5.58 18.03 7 16 7 13.33"/></g></svg>',
+        '.nojekyll': '',
+        'README.md': '# TideLine — Fishing Competition Scorer\n\nMobile-first, offline-ready PWA for real-time fishing competition logging, automated 5-category scoring with tie-breakers, and marshal audit verification.\n'
+      };
+
+      function buildCleanIndexHtml() {
+        const clone = document.documentElement.cloneNode(true);
+        const main = clone.querySelector('#mainContent');
+        if (main) main.innerHTML = '';
+        const modalBackdrop = clone.querySelector('#modalBackdrop');
+        if (modalBackdrop) modalBackdrop.classList.remove('open');
+        const modalSheet = clone.querySelector('#modalSheet');
+        if (modalSheet) modalSheet.innerHTML = '';
+        const printRoot = clone.querySelector('#printRoot');
+        if (printRoot) printRoot.innerHTML = '';
+        const toast = clone.querySelector('#toast');
+        if (toast) {
+          toast.classList.remove('show');
+          toast.textContent = '';
+        }
+        const sampleBanner = clone.querySelector('#sampleBanner');
+        if (sampleBanner) sampleBanner.style.display = 'none';
+        const sampleBtn = clone.querySelector('#sampleToggleBtn');
+        if (sampleBtn) {
+          sampleBtn.classList.remove('active');
+          sampleBtn.setAttribute('aria-checked', 'false');
+        }
+        const head = clone.querySelector('head');
+        if (head && !head.querySelector('link[rel="manifest"]')) {
+          const manifestLink = document.createElement('link');
+          manifestLink.setAttribute('rel', 'manifest');
+          manifestLink.setAttribute('href', './manifest.webmanifest');
+          const iconLink = document.createElement('link');
+          iconLink.setAttribute('rel', 'icon');
+          iconLink.setAttribute('type', 'image/svg+xml');
+          iconLink.setAttribute('href', './icon.svg');
+          const appleLink = document.createElement('link');
+          appleLink.setAttribute('rel', 'apple-touch-icon');
+          appleLink.setAttribute('href', './icon.svg');
+          const titleEl = head.querySelector('title');
+          if (titleEl) {
+            head.insertBefore(manifestLink, titleEl);
+            head.insertBefore(iconLink, titleEl);
+            head.insertBefore(appleLink, titleEl);
+          } else {
+            head.appendChild(manifestLink);
+            head.appendChild(iconLink);
+            head.appendChild(appleLink);
+          }
+        }
+        return '<!DOCTYPE html>\n' + clone.outerHTML;
+      }
+
+      function crc32Bytes(bytes) {
+        let crc = 0xFFFFFFFF;
+        for (let i = 0; i < bytes.length; i++) {
+          crc ^= bytes[i];
+          for (let j = 0; j < 8; j++) {
+            crc = (crc >>> 1) ^ (crc & 1 ? 0xEDB88320 : 0);
+          }
+        }
+        return (crc ^ 0xFFFFFFFF) >>> 0;
+      }
+
+      function createZipBytes(fileEntries) {
+        const encoder = new TextEncoder();
+        const localParts = [];
+        const centralParts = [];
+        let offset = 0;
+
+        for (const entry of fileEntries) {
+          const nameBytes = encoder.encode(entry.name);
+          const dataBytes = encoder.encode(entry.content);
+          const crc = crc32Bytes(dataBytes);
+
+          const local = new Uint8Array(30 + nameBytes.length);
+          const lv = new DataView(local.buffer);
+          lv.setUint32(0, 0x04034b50, true);
+          lv.setUint16(4, 20, true);
+          lv.setUint16(6, 0x0800, true);
+          lv.setUint16(8, 0, true);
+          lv.setUint16(10, 0, true);
+          lv.setUint16(12, 0, true);
+          lv.setUint32(14, crc, true);
+          lv.setUint32(18, dataBytes.length, true);
+          lv.setUint32(22, dataBytes.length, true);
+          lv.setUint16(26, nameBytes.length, true);
+          lv.setUint16(28, 0, true);
+          local.set(nameBytes, 30);
+
+          const central = new Uint8Array(46 + nameBytes.length);
+          const cv = new DataView(central.buffer);
+          cv.setUint32(0, 0x02014b50, true);
+          cv.setUint16(4, 20, true);
+          cv.setUint16(6, 20, true);
+          cv.setUint16(8, 0x0800, true);
+          cv.setUint16(10, 0, true);
+          cv.setUint16(12, 0, true);
+          cv.setUint16(14, 0, true);
+          cv.setUint32(16, crc, true);
+          cv.setUint32(20, dataBytes.length, true);
+          cv.setUint32(24, dataBytes.length, true);
+          cv.setUint16(28, nameBytes.length, true);
+          cv.setUint16(30, 0, true);
+          cv.setUint16(32, 0, true);
+          cv.setUint16(34, 0, true);
+          cv.setUint16(36, 0, true);
+          cv.setUint32(38, 0, true);
+          cv.setUint32(42, offset, true);
+          central.set(nameBytes, 46);
+
+          localParts.push(local, dataBytes);
+          centralParts.push(central);
+          offset += local.length + dataBytes.length;
+        }
+
+        const centralSize = centralParts.reduce((s, p) => s + p.length, 0);
+        const eocd = new Uint8Array(22);
+        const ev = new DataView(eocd.buffer);
+        ev.setUint32(0, 0x06054b50, true);
+        ev.setUint16(4, 0, true);
+        ev.setUint16(6, 0, true);
+        ev.setUint16(8, fileEntries.length, true);
+        ev.setUint16(10, fileEntries.length, true);
+        ev.setUint32(12, centralSize, true);
+        ev.setUint32(16, offset, true);
+        ev.setUint16(20, 0, true);
+
+        const totalLength = offset + centralSize + eocd.length;
+        const out = new Uint8Array(totalLength);
+        let pos = 0;
+        for (const p of localParts) { out.set(p, pos); pos += p.length; }
+        for (const p of centralParts) { out.set(p, pos); pos += p.length; }
+        out.set(eocd, pos);
+        return out;
+      }
+
+      function triggerBlobDownload(blob, filename) {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        setTimeout(() => URL.revokeObjectURL(url), 1500);
+      }
+
+      function downloadPwaZip() {
+        const entries = [{ name: 'index.html', content: buildCleanIndexHtml() }];
+        Object.keys(PWA_EXTRA_FILES).forEach(k => entries.push({ name: k, content: PWA_EXTRA_FILES[k] }));
+        const zipBytes = createZipBytes(entries);
+        triggerBlobDownload(new Blob([zipBytes], { type: 'application/zip' }), 'tideline-fishing-scorer-pwa.zip');
+        showToast('Downloaded tideline-fishing-scorer-pwa.zip (6 PWA files)');
+      }
+
+      function downloadSingleHtml() {
+        const htmlStr = buildCleanIndexHtml();
+        triggerBlobDownload(new Blob([htmlStr], { type: 'text/html;charset=utf-8' }), 'index.html');
+        showToast('Downloaded index.html');
+      }
+
+      function copyIndexHtmlToClipboard() {
+        const htmlStr = buildCleanIndexHtml();
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(htmlStr)
+            .then(() => showToast('Copied full index.html to clipboard! Paste into GitHub as index.html.'))
+            .catch(() => openManualCopyModal(htmlStr));
+        } else {
+          openManualCopyModal(htmlStr);
+        }
+      }
+
+      function openManualCopyModal(codeStr) {
+        const html = `
+          <div class="sheet-header">
+            <div>
+              <h2 class="sheet-title">Copy index.html</h2>
+              <div class="sheet-subtitle">Select all and copy, then paste into GitHub as index.html</div>
+            </div>
+            <button type="button" class="close-btn" data-close-modal aria-label="Close">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+          </div>
+          <div class="sheet-body">
+            <textarea id="manualCopyArea" class="input-field mono" readonly style="min-height:260px; font-size:11.5px; white-space:pre;">${escapeHtml(codeStr)}</textarea>
+          </div>
+          <div class="sheet-footer">
+            <button type="button" class="btn btn-primary btn-block" id="selectAllCopyBtn">Select All &amp; Copy</button>
+          </div>
+        `;
+        openModal(html, sheet => {
+          const area = sheet.querySelector('#manualCopyArea');
+          sheet.querySelector('#selectAllCopyBtn').addEventListener('click', () => {
+            area.focus();
+            area.select();
+            try {
+              document.execCommand('copy');
+              showToast('Copied index.html to clipboard');
+            } catch (err) {
+              showToast('Press Ctrl+C / Cmd+C to copy');
+            }
+          });
+        });
+      }
+
+      /* =========================================================
+         MODAL: SETTINGS & SAMPLE DATA CONTROLS
+      ========================================================= */
+      function openSettingsModal() {
+        const ds = getDataset();
+
+        const html = `
+          <div class="sheet-header">
+            <div>
+              <h2 class="sheet-title">Competition Settings</h2>
+              <div class="sheet-subtitle">${store.sampleMode ? 'Currently editing Sample Mode' : 'Currently editing Live Competition'}</div>
+            </div>
+            <button type="button" class="close-btn" data-close-modal aria-label="Close">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+          </div>
+          <div class="sheet-body">
+            <div class="drawer-rule-box" style="background:#E0F2FE; border-color:#7DD3FC; margin-bottom:14px;">
+              <div style="font-weight:800; color:#0C4A6E; margin-bottom:4px;">Download &amp; Publish App Files</div>
+              <div style="margin-bottom:10px; color:#0F172A;">
+                Save the complete PWA bundle directly to your computer to upload to GitHub Pages or Netlify Drop.
+              </div>
+              <div style="display:flex; flex-direction:column; gap:8px;">
+                <button type="button" class="btn btn-primary btn-block" id="downloadPwaZipBtn">Download Full PWA Bundle (.zip)</button>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+                  <button type="button" class="btn btn-secondary btn-sm" id="downloadHtmlBtn">Download index.html</button>
+                  <button type="button" class="btn btn-secondary btn-sm" id="copyHtmlBtn">Copy index.html</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="compNameInput"><span>Competition Name</span></label>
+              <div style="display:flex; gap:8px;">
+                <input type="text" id="compNameInput" class="input-field" value="${escapeHtml(ds.competitionName)}" />
+                <button type="button" class="btn btn-dark" id="saveCompNameBtn">Save</button>
+              </div>
+            </div>
+
+            <div class="drawer-rule-box" style="margin-top:16px;">
+              <div style="font-weight:800; color:#0F172A; margin-bottom:4px;">Load Sample Competition Data</div>
+              <div style="margin-bottom:10px;">
+                Test all 5 leaderboards, tie-breaker badges, edit history, and voided entries with realistic tournament data. Your live competition records stay safely preserved.
+              </div>
+              <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                <button type="button" class="btn ${store.sampleMode ? 'btn-secondary' : 'btn-primary'}" id="modalToggleSampleBtn" style="flex:1;">
+                  ${store.sampleMode ? 'Switch Back to Live Data' : 'Load Sample Competition Data'}
+                </button>
+                ${store.sampleMode ? '<button type="button" class="btn btn-secondary" id="resetSampleBtn">Reset Sample</button>' : ''}
+              </div>
+            </div>
+
+            <div class="drawer-rule-box" style="margin-top:12px;">
+              <div style="font-weight:800; color:#0F172A; margin-bottom:4px;">Offline Storage &amp; Backup</div>
+              <div style="margin-bottom:10px;">
+                All anglers, catches, and audit trails are saved automatically to device storage (<span class="mono">localStorage</span>) for zero-reception reliability on the water.
+              </div>
+              <button type="button" class="btn btn-secondary btn-block" id="settingsExportCsvBtn">Download Full CSV Backup</button>
+            </div>
+
+            ${!store.sampleMode ? `
+              <div class="drawer-rule-box" style="margin-top:12px; background:#FFF5F5; border-color:#FCA5A5;">
+                <div style="font-weight:800; color:#991B1B; margin-bottom:4px;">Reset Live Competition</div>
+                <div style="margin-bottom:10px; color:#7F1D1D;">
+                  Permanently clear all live anglers and catch logs to start a brand-new tournament. Export CSV first!
+                </div>
+                <button type="button" class="btn btn-danger-outline btn-block" id="clearLiveDataBtn">Clear All Live Data</button>
+              </div>
+            ` : ''}
+          </div>
+        `;
+
+        openModal(html, sheet => {
+          sheet.querySelector('#downloadPwaZipBtn').addEventListener('click', downloadPwaZip);
+          sheet.querySelector('#downloadHtmlBtn').addEventListener('click', downloadSingleHtml);
+          sheet.querySelector('#copyHtmlBtn').addEventListener('click', copyIndexHtmlToClipboard);
+
+          sheet.querySelector('#saveCompNameBtn').addEventListener('click', () => {
+            const val = sheet.querySelector('#compNameInput').value.trim();
+            if (val) {
+              ds.competitionName = val;
+              saveStore();
+              renderApp();
+              showToast('Competition name updated');
+            }
+          });
+
+          sheet.querySelector('#modalToggleSampleBtn').addEventListener('click', () => {
+            toggleSampleMode();
+            closeModal();
+          });
+
+          const resetSample = sheet.querySelector('#resetSampleBtn');
+          if (resetSample) {
+            resetSample.addEventListener('click', () => {
+              store.sampleData = buildSampleDataset();
+              saveStore();
+              closeModal();
+              renderApp();
+              showToast('Sample competition reset to original dataset');
+            });
+          }
+
+          sheet.querySelector('#settingsExportCsvBtn').addEventListener('click', exportCsvBackup);
+
+          const clearBtn = sheet.querySelector('#clearLiveDataBtn');
+          if (clearBtn) {
+            let confirmArmed = false;
+            clearBtn.addEventListener('click', () => {
+              if (!confirmArmed) {
+                confirmArmed = true;
+                clearBtn.textContent = 'Tap Again to Confirm Clear Live Data';
+                clearBtn.classList.remove('btn-danger-outline');
+                clearBtn.classList.add('btn-danger');
+                return;
+              }
+              store.liveData = createEmptyDataset();
+              saveStore();
+              closeModal();
+              renderApp();
+              showToast('Live competition cleared');
+            });
+          }
+        });
+      }
+
+      function toggleSampleMode() {
+        store.sampleMode = !store.sampleMode;
+        uiState.divisionFilter = 'ALL';
+        saveStore();
+        renderApp();
+        showToast(store.sampleMode
+          ? 'Sample Competition Loaded (8 anglers, 22 entries, tie-breakers active)'
+          : 'Returned to Live Competition Data');
+      }
+
+      /* =========================================================
+         INITIALIZATION & GLOBAL EVENT LISTENERS
+      ========================================================= */
+      function init() {
+        loadStore();
+
+        document.querySelectorAll('.nav-tab').forEach(btn => {
+          btn.addEventListener('click', () => {
+            uiState.activeTab = btn.dataset.tab;
+            renderApp();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          });
+        });
+
+        document.getElementById('fabLogCatch').addEventListener('click', () => openLogCatchModal(null));
+        document.getElementById('sampleToggleBtn').addEventListener('click', toggleSampleMode);
+        document.getElementById('exitSampleBtn').addEventListener('click', toggleSampleMode);
+        document.getElementById('settingsBtn').addEventListener('click', openSettingsModal);
+
+        document.getElementById('modalBackdrop').addEventListener('click', e => {
+          if (e.target.id === 'modalBackdrop') closeModal();
+        });
+
+        document.addEventListener('keydown', e => {
+          if (e.key === 'Escape' && document.getElementById('modalBackdrop').classList.contains('open')) {
+            closeModal();
+          }
+        });
+
+        renderApp();
+
+        if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) {
+          window.addEventListener('load', () => {
+            navigator.serviceWorker.register('./sw.js').catch(() => {});
+          });
+        }
+      }
+
+      init();
+    })();
+  </script>
+
+
+</body></html>
