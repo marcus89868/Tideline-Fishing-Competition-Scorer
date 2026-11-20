@@ -2,9 +2,9 @@
 <html lang="en"><head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <meta name="theme-color" content="#0F172A">
-  <meta name="description" content="Real-time mobile-first fishing competition scorer with automated 5-category leaderboards, tie-breaker resolution, and transparent marshal audit log.">
-  <link rel="manifest" href="./manifest.webmanifest"><link rel="icon" type="image/svg+xml" href="./icon.svg"><link rel="apple-touch-icon" href="./icon.svg"><title>TideLine — Fishing Competition Scorer</title>
+  <meta name="theme-color" content="#003B5C">
+  <meta name="description" content="Mobile-first fishing competition scorer with automated 5-category leaderboards, tie-breaker resolution, and transparent marshal audit log.">
+  <link rel="manifest" href="./manifest.webmanifest"><link rel="icon" type="image/svg+xml" href="./icon.svg"><link rel="apple-touch-icon" href="./icon.svg"><title>Fishing Competition Scorer</title>
   <style>
     *, *::before, *::after {
       box-sizing: border-box;
@@ -14,8 +14,8 @@
     html, body {
       margin: 0;
       padding: 0;
-      background-color: #E2E8F0;
-      color: #0F172A;
+      background-color: #DCE9F0;
+      color: #00263E;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
       font-size: 15px;
       line-height: 1.45;
@@ -23,49 +23,53 @@
     }
 
     .app-theme {
-      --bg-canvas: #F1F5F9;
+      --bg-canvas: #EEF5F8;
       --bg-surface: #FFFFFF;
-      --bg-subtle: #F8FAFC;
-      --bg-muted: #E2E8F0;
-      --ink-primary: #0F172A;
-      --ink-secondary: #334155;
-      --ink-muted: #475569;
-      --border-strong: #CBD5E1;
-      --border-soft: #E2E8F0;
-      --brand: #0369A1;
-      --brand-hover: #075985;
-      --brand-deep: #0C4A6E;
-      --brand-tint: #E0F2FE;
+      --bg-subtle: #F4F9FB;
+      --bg-muted: #DCE8EF;
+      --ink-primary: #00263E;
+      --ink-secondary: #1D445B;
+      --ink-muted: #3F667C;
+      --border-strong: #B4CDDC;
+      --border-soft: #DAE7EE;
+      --brand: #0082BA;
+      --brand-hover: #006996;
+      --brand-deep: #003B5C;
+      --brand-tint: #E2F4FC;
+      --oz-green: #78BE20;
+      --oz-green-dark: #2F6309;
+      --oz-green-tint: #ECF7DD;
+      --oz-green-border: #A8DC66;
       --gold-bg: #FFFBEB;
-      --gold-border: #F59E0B;
-      --gold-badge: #B45309;
-      --gold-ink: #78350F;
-      --silver-bg: #F8FAFC;
-      --silver-border: #94A3B8;
-      --silver-badge: #475569;
-      --silver-ink: #1E293B;
-      --tb-bg: #E0F2FE;
-      --tb-ink: #0369A1;
-      --tb-border: #7DD3FC;
+      --gold-border: #E59400;
+      --gold-badge: #C47800;
+      --gold-ink: #6B3E00;
+      --silver-bg: #F4F9FB;
+      --silver-border: #7A9EB3;
+      --silver-badge: #365C73;
+      --silver-ink: #00263E;
+      --tb-bg: #E2F4FC;
+      --tb-ink: #005A84;
+      --tb-border: #6BC4E8;
       --danger-bg: #FEF2F2;
       --danger-ink: #991B1B;
       --danger-border: #FCA5A5;
-      --danger-solid: #DC2626;
-      --warn-bg: #FEF3C7;
-      --warn-ink: #92400E;
-      --warn-border: #FCD34D;
-      --ok-bg: #DCFCE7;
-      --ok-ink: #166534;
-      --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.06);
-      --shadow-md: 0 6px 20px rgba(15, 23, 42, 0.12);
-      --shadow-fab: 0 8px 24px rgba(3, 105, 161, 0.36);
+      --danger-solid: #C81E1E;
+      --warn-bg: #FEF6DB;
+      --warn-ink: #7A4A00;
+      --warn-border: #F2C14E;
+      --ok-bg: #ECF7DD;
+      --ok-ink: #2F6309;
+      --shadow-sm: 0 1px 2px rgba(0, 43, 73, 0.07);
+      --shadow-md: 0 6px 20px rgba(0, 43, 73, 0.13);
+      --shadow-fab: 0 8px 24px rgba(0, 130, 186, 0.38);
       --radius-lg: 16px;
       --radius-md: 12px;
       --radius-sm: 8px;
       min-height: 100vh;
       display: flex;
       justify-content: center;
-      background: #E2E8F0;
+      background: #DCE9F0;
     }
 
     .mobile-shell {
@@ -76,7 +80,7 @@
       display: flex;
       flex-direction: column;
       position: relative;
-      box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.08), 0 12px 40px rgba(15, 23, 42, 0.09);
+      box-shadow: 0 0 0 1px rgba(0, 59, 92, 0.1), 0 12px 40px rgba(0, 59, 92, 0.1);
     }
 
     .tabular {
@@ -88,15 +92,15 @@
       font-variant-numeric: tabular-nums;
     }
 
-    /* Header */
+    /* Header — OzFish Deep Ocean Navy with Habitat Green accent stripe */
     .app-header {
       position: sticky;
       top: 0;
       z-index: 30;
-      background: #0F172A;
+      background: #003B5C;
       color: #FFFFFF;
-      padding: 12px 16px;
-      border-bottom: 1px solid #1E293B;
+      padding: 10px 14px;
+      border-bottom: 3px solid #78BE20;
     }
 
     .header-row {
@@ -114,16 +118,26 @@
       flex: 1;
     }
 
-    .brand-mark {
-      width: 38px;
-      height: 38px;
-      border-radius: 10px;
-      background: #0369A1;
-      display: flex;
+    .brand-logo-wrap {
+      width: 44px;
+      height: 44px;
+      padding: 3px;
+      border-radius: 11px;
+      background: #FFFFFF;
+      display: inline-flex;
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
-      color: #FFFFFF;
+      box-shadow: 0 1px 4px rgba(0, 20, 36, 0.25);
+      overflow: hidden;
+    }
+
+    .brand-logo-img {
+      width: 38px;
+      height: 38px;
+      object-fit: contain;
+      display: block;
+      border-radius: 8px;
     }
 
     .brand-text {
@@ -143,18 +157,18 @@
 
     .app-subtitle {
       font-size: 12px;
-      color: #CBD5E1;
-      font-weight: 500;
+      color: #CBE7F5;
+      font-weight: 600;
       display: flex;
       align-items: center;
       gap: 6px;
     }
 
     .offline-dot {
-      width: 7px;
-      height: 7px;
+      width: 8px;
+      height: 8px;
       border-radius: 999px;
-      background: #4ADE80;
+      background: #78BE20;
       display: inline-block;
       flex-shrink: 0;
     }
@@ -166,85 +180,30 @@
       flex-shrink: 0;
     }
 
-    /* Sample Toggle Switch */
-    .sample-toggle-btn {
-      min-height: 44px;
-      padding: 6px 10px;
-      border-radius: 10px;
-      border: 1.5px solid #334155;
-      background: #1E293B;
-      color: #F8FAFC;
-      font-size: 12px;
-      font-weight: 700;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      transition: background 0.15s ease, border-color 0.15s ease;
-    }
-
-    .sample-toggle-btn:hover {
-      background: #334155;
-    }
-
-    .sample-toggle-btn.active {
-      background: #0369A1;
-      border-color: #38BDF8;
-      color: #FFFFFF;
-    }
-
-    .toggle-track {
-      width: 30px;
-      height: 18px;
-      border-radius: 999px;
-      background: #475569;
-      position: relative;
-      transition: background 0.15s ease;
-      flex-shrink: 0;
-    }
-
-    .sample-toggle-btn.active .toggle-track {
-      background: #38BDF8;
-    }
-
-    .toggle-thumb {
-      width: 14px;
-      height: 14px;
-      border-radius: 999px;
-      background: #FFFFFF;
-      position: absolute;
-      top: 2px;
-      left: 2px;
-      transition: transform 0.15s ease;
-    }
-
-    .sample-toggle-btn.active .toggle-thumb {
-      transform: translateX(12px);
-    }
-
     .icon-btn {
       min-width: 44px;
       min-height: 44px;
       border-radius: 10px;
-      border: 1.5px solid #334155;
-      background: #1E293B;
-      color: #F8FAFC;
+      border: 1.5px solid #2A6485;
+      background: #004E78;
+      color: #FFFFFF;
       display: inline-flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      transition: background 0.15s ease;
+      transition: background 0.15s ease, border-color 0.15s ease;
     }
 
     .icon-btn:hover {
-      background: #334155;
+      background: #006194;
+      border-color: #78BE20;
     }
 
     /* Sample Banner */
     .sample-banner {
-      background: #FEF3C7;
-      color: #78350F;
-      border-bottom: 1.5px solid #F59E0B;
+      background: #ECF7DD;
+      color: #2F6309;
+      border-bottom: 1.5px solid #78BE20;
       padding: 8px 16px;
       font-size: 12.5px;
       font-weight: 700;
@@ -255,7 +214,7 @@
     }
 
     .sample-banner button {
-      background: #78350F;
+      background: #003B5C;
       color: #FFFFFF;
       border: none;
       border-radius: 6px;
@@ -301,8 +260,8 @@
     }
 
     .chip-btn.active {
-      background: #0F172A;
-      border-color: #0F172A;
+      background: #003B5C;
+      border-color: #003B5C;
       color: #FFFFFF;
     }
 
@@ -329,7 +288,7 @@
     }
 
     .podium-card:hover {
-      border-color: #64748B;
+      border-color: #0082BA;
       box-shadow: var(--shadow-md);
     }
 
@@ -601,11 +560,11 @@
     }
 
     .btn-dark {
-      background: #0F172A;
+      background: #003B5C;
       color: #FFFFFF;
     }
     .btn-dark:hover {
-      background: #1E293B;
+      background: #004E78;
     }
 
     .btn-secondary {
@@ -615,7 +574,7 @@
     }
     .btn-secondary:hover {
       background: var(--bg-subtle);
-      border-color: #94A3B8;
+      border-color: #0082BA;
     }
 
     .btn-danger {
@@ -665,7 +624,7 @@
     }
 
     .angler-card:hover {
-      border-color: #64748B;
+      border-color: #0082BA;
       box-shadow: var(--shadow-md);
     }
 
@@ -690,13 +649,13 @@
       font-weight: 800;
       padding: 2px 8px;
       border-radius: 999px;
-      background: #E2E8F0;
-      color: #1E293B;
+      background: #E2F0F7;
+      color: #003B5C;
     }
 
     .div-pill.junior {
-      background: #DBEAFE;
-      color: #1E40AF;
+      background: #ECF7DD;
+      color: #2F6309;
     }
 
     .podium-count-pill {
@@ -775,7 +734,7 @@
     }
 
     .log-id {
-      background: #0F172A;
+      background: #003B5C;
       color: #FFFFFF;
       padding: 2px 7px;
       border-radius: 6px;
@@ -799,6 +758,7 @@
     .status-active {
       background: var(--ok-bg);
       color: var(--ok-ink);
+      border: 1px solid var(--oz-green-border);
     }
 
     .status-edited {
@@ -863,7 +823,7 @@
       border-radius: 8px;
       padding: 7px 10px;
       margin-bottom: 8px;
-      border-left: 3px solid #64748B;
+      border-left: 3px solid #0082BA;
     }
 
     .audit-trail-box {
@@ -1149,7 +1109,7 @@
       max-height: 230px;
       overflow-y: auto;
       background: var(--bg-surface);
-      border: 2px solid #0F172A;
+      border: 2px solid #003B5C;
       border-radius: var(--radius-md);
       box-shadow: var(--shadow-md);
       z-index: 80;
@@ -1200,7 +1160,7 @@
       margin-top: 6px;
       border-radius: 10px;
       background: var(--brand-tint);
-      border: 1.5px solid #7DD3FC;
+      border: 1.5px solid #6BC4E8;
       color: var(--brand-deep);
       font-size: 13px;
       font-weight: 800;
@@ -1327,7 +1287,7 @@
       bottom: calc(146px + env(safe-area-inset-bottom, 0px));
       left: 50%;
       transform: translateX(-50%) translateY(16px);
-      background: #0F172A;
+      background: #003B5C;
       color: #FFFFFF;
       padding: 11px 16px;
       border-radius: 12px;
@@ -1405,28 +1365,19 @@
       <header class="app-header">
         <div class="header-row">
           <div class="brand-block">
-            <div class="brand-mark" aria-hidden="true">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M6.5 12c.94-3.46 4.94-6 8.5-6 3.56 0 6.06 2.54 7 6-.94 3.47-3.44 6-7 6-3.56 0-7.56-2.53-8.5-6Z"></path>
-                <path d="M18 12v.5"></path>
-                <path d="M16 17.93a9.77 9.77 0 0 1 0-11.86"></path>
-                <path d="M7 10.67C7 8 5.58 5.97 2.73 5.5c-1 1.5-1 5 .23 6.5-1.24 1.5-1.24 5-.23 6.5C5.58 18.03 7 16 7 13.33"></path>
-              </svg>
+            <div class="brand-logo-wrap">
+              <img id="headerLogoImg" class="brand-logo-img" src="data:image/jpeg;base64,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" alt="Fishing Competition Scorer Logo">
             </div>
             <div class="brand-text">
-              <h1 class="app-title" id="headerCompTitle">TideLine Comp Scorer</h1>
+              <h1 class="app-title" id="headerCompTitle">Fishing Competition Scorer</h1>
               <div class="app-subtitle">
                 <span class="offline-dot" title="Saved locally on device"></span>
-                <span id="headerStats">2 anglers · 0 active</span>
+                <span id="headerStats">0 anglers · 0 active</span>
               </div>
             </div>
           </div>
 
           <div class="header-controls">
-            <button type="button" id="sampleToggleBtn" class="sample-toggle-btn" role="switch" aria-checked="false" title="Toggle realistic sample competition data">
-              <span>Sample</span>
-              <span class="toggle-track" aria-hidden="true"><span class="toggle-thumb"></span></span>
-            </button>
             <button type="button" id="settingsBtn" class="icon-btn" aria-label="Competition Settings" title="Competition Settings">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                 <circle cx="12" cy="12" r="3"></circle>
@@ -1459,7 +1410,7 @@
 
       <!-- Three-Tab Bottom Navigation -->
       <nav class="bottom-nav" aria-label="Primary Navigation">
-        <button type="button" class="nav-tab" data-tab="podium" id="navPodium">
+        <button type="button" class="nav-tab active" data-tab="podium" id="navPodium">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path>
             <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path>
@@ -1471,7 +1422,7 @@
           <span>Podium</span>
         </button>
 
-        <button type="button" class="nav-tab active" data-tab="anglers" id="navAnglers">
+        <button type="button" class="nav-tab" data-tab="anglers" id="navAnglers">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
             <circle cx="9" cy="7" r="4"></circle>
@@ -1512,6 +1463,7 @@
          CONSTANTS & CATEGORIES
       ========================================================= */
       const STORAGE_KEY = 'tideline_fishing_comp_v1';
+      const DEFAULT_LOGO_DATA_URI = "data:image/jpeg;base64,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";
       const DEFAULT_SPECIES = ['Snapper', 'Kingfish', 'Flathead', 'Bream', 'Mulloway', 'Trout', 'Bass', 'Barramundi'];
       const DEFAULT_DIVISIONS = ['Senior', 'Junior', 'Ladies', 'Masters'];
       const EDIT_REASONS = [
@@ -1810,7 +1762,7 @@
 
       function createEmptyDataset() {
         return {
-          competitionName: 'TideLine Comp Scorer',
+          competitionName: 'Fishing Competition Scorer',
           anglers: [],
           catches: [],
           nextSeq: 1
@@ -1822,6 +1774,7 @@
       ========================================================= */
       let store = {
         sampleMode: false,
+        customLogoDataUrl: '',
         liveData: createEmptyDataset(),
         sampleData: buildSampleDataset()
       };
@@ -1840,6 +1793,17 @@
         return store.sampleMode ? store.sampleData : store.liveData;
       }
 
+      function applyHeaderLogo() {
+        const img = document.getElementById('headerLogoImg');
+        if (!img) return;
+        img.onerror = function () {
+          if (img.src !== DEFAULT_LOGO_DATA_URI) {
+            img.src = DEFAULT_LOGO_DATA_URI;
+          }
+        };
+        img.src = store.customLogoDataUrl || DEFAULT_LOGO_DATA_URI;
+      }
+
       function loadStore() {
         try {
           const raw = localStorage.getItem(STORAGE_KEY);
@@ -1847,7 +1811,11 @@
             const parsed = JSON.parse(raw);
             if (parsed && parsed.liveData) {
               store.sampleMode = Boolean(parsed.sampleMode);
+              store.customLogoDataUrl = typeof parsed.customLogoDataUrl === 'string' ? parsed.customLogoDataUrl : '';
               store.liveData = parsed.liveData;
+              if (store.liveData.competitionName === 'TideLine Comp Scorer' || store.liveData.competitionName === 'OzFish Comp Scorer') {
+                store.liveData.competitionName = 'Fishing Competition Scorer';
+              }
               store.sampleData = parsed.sampleData || buildSampleDataset();
             }
           }
@@ -2150,14 +2118,11 @@
         const activeCount = ds.catches.filter(c => c.status !== 'voided').length;
         const voidCount = ds.catches.length - activeCount;
 
-        document.getElementById('headerCompTitle').textContent = ds.competitionName || 'TideLine Comp Scorer';
+        document.getElementById('headerCompTitle').textContent = ds.competitionName || 'Fishing Competition Scorer';
         document.getElementById('headerStats').textContent =
           `${ds.anglers.length} ${ds.anglers.length === 1 ? 'angler' : 'anglers'} · ${activeCount} active` +
           (voidCount > 0 ? ` · ${voidCount} void` : '');
 
-        const sampleBtn = document.getElementById('sampleToggleBtn');
-        sampleBtn.classList.toggle('active', store.sampleMode);
-        sampleBtn.setAttribute('aria-checked', String(store.sampleMode));
         document.getElementById('sampleBanner').style.display = store.sampleMode ? 'flex' : 'none';
 
         // Update nav tabs
@@ -2187,17 +2152,19 @@
       function getAvailableDivisions(ds) {
         const set = new Set();
         ds.anglers.forEach(a => {
-          if (a.division) set.add(a.division);
+          if (a.division && a.division.trim()) set.add(a.division.trim());
         });
         return Array.from(set);
       }
 
       function renderDivisionFilterBar(ds) {
         const divs = getAvailableDivisions(ds);
-        if (divs.length <= 1) return '';
+        if (divs.length === 0) return '';
+        const hasUndivided = ds.anglers.some(a => !a.division || !a.division.trim());
+        if (divs.length === 1 && !hasUndivided) return '';
         return `
           <div class="filter-strip" aria-label="Filter by Division">
-            <button type="button" class="chip-btn ${uiState.divisionFilter === 'ALL' ? 'active' : ''}" data-div="ALL">All Divisions</button>
+            <button type="button" class="chip-btn ${uiState.divisionFilter === 'ALL' ? 'active' : ''}" data-div="ALL">All</button>
             ${divs.map(d => `
               <button type="button" class="chip-btn ${uiState.divisionFilter === d ? 'active' : ''}" data-div="${escapeHtml(d)}">${escapeHtml(d)}</button>
             `).join('')}
@@ -2214,15 +2181,14 @@
         if (ds.anglers.length === 0) {
           return `
             <div class="empty-state">
-              <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#0369A1" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#0082BA" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/>
                 <path d="M4 22h16"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/>
               </svg>
               <h3>Ready for Weigh-In</h3>
-              <p>Register anglers and tap <strong>+ Catch</strong> to start live scoring, or toggle <strong>Sample</strong> above to preview a full tournament.</p>
+              <p>Register anglers and tap <strong>+ Catch</strong> to start live competition scoring.</p>
               <div style="display:flex; gap:8px; justify-content:center; flex-wrap:wrap;">
                 <button type="button" class="btn btn-primary" id="emptyRegBtn">+ Register Angler</button>
-                <button type="button" class="btn btn-secondary" id="emptySampleBtn">Load Sample Data</button>
               </div>
             </div>
           `;
@@ -2320,9 +2286,6 @@
 
         const emptyReg = document.getElementById('emptyRegBtn');
         if (emptyReg) emptyReg.addEventListener('click', () => openAnglerFormModal(null));
-
-        const emptySample = document.getElementById('emptySampleBtn');
-        if (emptySample) emptySample.addEventListener('click', toggleSampleMode);
       }
 
       /* =========================================================
@@ -2355,7 +2318,7 @@
           ? `
             <div class="empty-state">
               <h3>${ds.anglers.length === 0 ? 'No Anglers Registered' : 'No Matching Anglers'}</h3>
-              <p>${ds.anglers.length === 0 ? 'Add competitors with their badge ID and division to begin logging catches.' : 'Try clearing your search or division filter.'}</p>
+              <p>${ds.anglers.length === 0 ? 'Add competitors with their badge ID (and optional division) to begin logging catches.' : 'Try clearing your search or division filter.'}</p>
               ${ds.anglers.length === 0 ? '<button type="button" class="btn btn-primary" id="emptyAnglerAddBtn">+ Register First Angler</button>' : ''}
             </div>
           `
@@ -2368,6 +2331,7 @@
                 if (pm.firsts > 0) podiumLabels.push(`${pm.firsts}× 1st`);
                 if (pm.seconds > 0) podiumLabels.push(`${pm.seconds}× 2nd`);
                 const divClass = (a.division || '').toLowerCase() === 'junior' ? 'junior' : '';
+                const divBadgeHtml = a.division ? `<span class="div-pill ${divClass}">${escapeHtml(a.division)}</span>` : '';
 
                 return `
                   <button type="button" class="angler-card" data-open-angler="${a.id}">
@@ -2376,7 +2340,7 @@
                         <div class="angler-name">${escapeHtml(a.name)}</div>
                         <div style="display:flex; align-items:center; gap:6px; margin-top:4px; flex-wrap:wrap;">
                           <span class="badge-tag mono">#${escapeHtml(a.badge)}</span>
-                          <span class="div-pill ${divClass}">${escapeHtml(a.division || 'Open')}</span>
+                          ${divBadgeHtml}
                         </div>
                       </div>
                       ${podiumLabels.length > 0 ? `<span class="podium-count-pill">${escapeHtml(podiumLabels.join(' · '))}</span>` : ''}
@@ -2569,7 +2533,7 @@
                 <span>${escapeHtml(angler ? angler.name : 'Unknown Angler')}</span>
                 ${angler ? `<span class="badge-tag mono">#${escapeHtml(angler.badge)}</span>` : ''}
               </button>
-              ${angler ? `<span class="div-pill ${(angler.division || '').toLowerCase() === 'junior' ? 'junior' : ''}">${escapeHtml(angler.division || 'Open')}</span>` : ''}
+              ${angler && angler.division ? `<span class="div-pill ${angler.division.toLowerCase() === 'junior' ? 'junior' : ''}">${escapeHtml(angler.division)}</span>` : ''}
             </div>
           `
           : '';
@@ -2719,7 +2683,7 @@
 
         const computed = computeAllStats(ds, uiState.divisionFilter);
         const lb = computed.leaderboards[categoryId];
-        const divTag = uiState.divisionFilter === 'ALL' ? 'All Divisions' : `${uiState.divisionFilter} Division`;
+        const divTag = uiState.divisionFilter === 'ALL' ? 'Overall Standings' : `${uiState.divisionFilter} Division`;
 
         const rankedHtml = lb.entries.length === 0
           ? `<div class="empty-state"><h3>No Qualifying Catches</h3><p>No active catches logged in this view yet.</p></div>`
@@ -2727,6 +2691,9 @@
               const placeClass = e.rank === 1 ? 'place-1' : (e.rank === 2 ? 'place-2' : '');
               const badgeClass = e.rank === 1 ? 'rank-1' : (e.rank === 2 ? 'rank-2' : 'rank-other');
               const rankText = e.rank === 1 ? '1ST' : (e.rank === 2 ? '2ND' : `#${e.rank}`);
+              const divPillHtml = e.angler.division
+                ? `<span class="div-pill ${e.angler.division.toLowerCase() === 'junior' ? 'junior' : ''}">${escapeHtml(e.angler.division)}</span>`
+                : '';
               return `
                 <button type="button" class="rank-list-item ${placeClass}" data-drawer-angler="${e.angler.id}">
                   <div class="podium-left">
@@ -2735,7 +2702,7 @@
                       <div class="podium-name-line">
                         <span class="podium-angler-name">${escapeHtml(e.angler.name)}</span>
                         <span class="badge-tag mono">#${escapeHtml(e.angler.badge)}</span>
-                        <span class="div-pill ${(e.angler.division || '').toLowerCase() === 'junior' ? 'junior' : ''}">${escapeHtml(e.angler.division || 'Open')}</span>
+                        ${divPillHtml}
                       </div>
                       <div class="podium-meta">
                         <span>${escapeHtml(e.meta)}</span>
@@ -2753,7 +2720,7 @@
         const unrankedHtml = lb.unranked.length > 0
           ? `
             <div style="margin-top:16px;">
-              <div style="font-size:12px; font-weight:800; color:#475569; text-transform:uppercase; letter-spacing:0.04em; margin-bottom:8px;">
+              <div style="font-size:12px; font-weight:800; color:#3F667C; text-transform:uppercase; letter-spacing:0.04em; margin-bottom:8px;">
                 Registered · No Active Catches (${lb.unranked.length})
               </div>
               ${lb.unranked.map(st => `
@@ -2765,7 +2732,7 @@
                       <span class="badge-tag mono">#${escapeHtml(st.angler.badge)}</span>
                     </div>
                   </div>
-                  <span style="font-size:12.5px; font-weight:700; color:#475569;">0 fish</span>
+                  <span style="font-size:12.5px; font-weight:700; color:#3F667C;">0 fish</span>
                 </button>
               `).join('')}
             </div>
@@ -2825,7 +2792,7 @@
               <div class="stat-cell-label">${escapeHtml(cat.shortTitle)}</div>
               <div style="display:flex; align-items:baseline; justify-content:space-between; gap:4px; margin-top:3px;">
                 <strong class="tabular" style="font-size:14.5px;">${r ? (r.rank === 1 ? '1st' : r.rank === 2 ? '2nd' : '#' + r.rank) : '—'}</strong>
-                <span class="tabular" style="font-size:12.5px; font-weight:700; color:#334155;">${r ? escapeHtml(r.value) : 'No catch'}</span>
+                <span class="tabular" style="font-size:12.5px; font-weight:700; color:#1D445B;">${r ? escapeHtml(r.value) : 'No catch'}</span>
               </div>
               ${r && r.tb ? `<div style="margin-top:3px;"><span class="tb-badge">${escapeHtml(r.tb)}</span></div>` : ''}
             </div>
@@ -2836,41 +2803,45 @@
           ? `<div class="empty-state"><h3>No Catches Logged</h3><p>Tap "+ Log Catch" below to record a fish for ${escapeHtml(angler.name)}.</p></div>`
           : `<div class="list-stack">${anglerCatches.map(c => renderAuditCard(c, angler, false)).join('')}</div>`;
 
+        const profileSub = angler.division
+          ? `Badge #${escapeHtml(angler.badge)} · ${escapeHtml(angler.division)} Division`
+          : `Badge #${escapeHtml(angler.badge)}`;
+
         const html = `
           <div class="sheet-header">
             <div>
               <h2 class="sheet-title">${escapeHtml(angler.name)}</h2>
-              <div class="sheet-subtitle">Badge #${escapeHtml(angler.badge)} · ${escapeHtml(angler.division || 'Open')} Division</div>
+              <div class="sheet-subtitle">${profileSub}</div>
             </div>
             <button type="button" class="close-btn" data-close-modal aria-label="Close">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
             </button>
           </div>
           <div class="sheet-body">
-            <div class="angler-stats-grid tabular" style="margin-bottom:10px; background:#0F172A; color:#FFFFFF; border-color:#0F172A;">
+            <div class="angler-stats-grid tabular" style="margin-bottom:10px; background:#003B5C; color:#FFFFFF; border-color:#003B5C;">
               <div>
-                <div class="stat-cell-label" style="color:#94A3B8;">Active Fish</div>
+                <div class="stat-cell-label" style="color:#A8D8EE;">Active Fish</div>
                 <div class="stat-cell-val" style="color:#FFFFFF; font-size:18px;">${st.count}</div>
               </div>
               <div>
-                <div class="stat-cell-label" style="color:#94A3B8;">Combined Wt</div>
+                <div class="stat-cell-label" style="color:#A8D8EE;">Combined Wt</div>
                 <div class="stat-cell-val" style="color:#FFFFFF; font-size:18px;">${formatWeight(st.totalWeightKg)} kg</div>
               </div>
               <div>
-                <div class="stat-cell-label" style="color:#94A3B8;">Combined Len</div>
+                <div class="stat-cell-label" style="color:#A8D8EE;">Combined Len</div>
                 <div class="stat-cell-val" style="color:#FFFFFF; font-size:18px;">${formatLength(st.totalLengthCm)} cm</div>
               </div>
             </div>
-            <div style="font-size:12px; font-weight:600; color:#475569; margin-bottom:12px;">
+            <div style="font-size:12px; font-weight:600; color:#3F667C; margin-bottom:12px;">
               Totals computed from ${st.count} verified ${st.count === 1 ? 'catch' : 'catches'}${voidedCount > 0 ? ` (${voidedCount} voided excluded)` : ''}.
             </div>
 
-            <div style="font-size:12px; font-weight:800; color:#475569; text-transform:uppercase; letter-spacing:0.04em; margin-bottom:8px;">
+            <div style="font-size:12px; font-weight:800; color:#3F667C; text-transform:uppercase; letter-spacing:0.04em; margin-bottom:8px;">
               Overall Category Standings
             </div>
             <div class="mini-standings">${standingsHtml}</div>
 
-            <div style="font-size:12px; font-weight:800; color:#475569; text-transform:uppercase; letter-spacing:0.04em; margin-bottom:8px;">
+            <div style="font-size:12px; font-weight:800; color:#3F667C; text-transform:uppercase; letter-spacing:0.04em; margin-bottom:8px;">
               Individual Catch Audit Log (${anglerCatches.length})
             </div>
             ${catchesHtml}
@@ -2993,10 +2964,11 @@
               chipSlot.innerHTML = '';
               return;
             }
+            const divSuffix = selectedAngler.division ? ` · ${escapeHtml(selectedAngler.division)}` : '';
             chipSlot.innerHTML = `
               <div class="selected-angler-pill">
-                <span>Selected: ${escapeHtml(selectedAngler.name)} (#${escapeHtml(selectedAngler.badge)} · ${escapeHtml(selectedAngler.division || 'Open')})</span>
-                <button type="button" id="clearSelectedAngler" style="background:none;border:none;color:#0C4A6E;font-weight:900;cursor:pointer;padding:2px 6px;">Change</button>
+                <span>Selected: ${escapeHtml(selectedAngler.name)} (#${escapeHtml(selectedAngler.badge)}${divSuffix})</span>
+                <button type="button" id="clearSelectedAngler" style="background:none;border:none;color:#003B5C;font-weight:900;cursor:pointer;padding:2px 6px;">Change</button>
               </div>
             `;
             chipSlot.querySelector('#clearSelectedAngler').addEventListener('click', () => {
@@ -3023,12 +2995,12 @@
             let out = matches.map(a => `
               <button type="button" class="combo-option ${selectedAngler && selectedAngler.id === a.id ? 'selected' : ''}" data-pick-angler="${a.id}">
                 <span>${escapeHtml(a.name)}</span>
-                <span class="badge-tag mono">#${escapeHtml(a.badge)} · ${escapeHtml(a.division || 'Open')}</span>
+                <span class="badge-tag mono">#${escapeHtml(a.badge)}${a.division ? ' · ' + escapeHtml(a.division) : ''}</span>
               </button>
             `).join('');
 
             if (matches.length === 0) {
-              out += `<div style="padding:12px; font-size:13px; color:#475569; font-weight:600;">No registered anglers match "${escapeHtml(filterText)}".</div>`;
+              out += `<div style="padding:12px; font-size:13px; color:#3F667C; font-weight:600;">No registered anglers match "${escapeHtml(filterText)}".</div>`;
             }
 
             out += `<button type="button" class="combo-option combo-add-new" data-quick-register="true">+ Register New Angler</button>`;
@@ -3162,13 +3134,13 @@
         const ds = getDataset();
         const existing = editAnglerId ? ds.anglers.find(a => a.id === editAnglerId) : null;
         const defaultBadge = existing ? existing.badge : suggestNextBadge(ds);
-        const currentDiv = existing ? existing.division : 'Senior';
+        const currentDiv = existing ? (existing.division || '') : '';
 
         const html = `
           <div class="sheet-header">
             <div>
               <h2 class="sheet-title">${existing ? 'Edit Angler' : 'Register Angler'}</h2>
-              <div class="sheet-subtitle">${existing ? 'Update competitor badge or division' : 'Quick competitor check-in'}</div>
+              <div class="sheet-subtitle">${existing ? 'Update competitor badge or optional division' : 'Quick competitor check-in'}</div>
             </div>
             <button type="button" class="close-btn" data-close-modal aria-label="Close">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
@@ -3194,9 +3166,10 @@
 
             <div class="form-group">
               <label class="form-label" for="anglerDivisionInput">
-                <span>Category / Division <span class="label-req">*</span></span>
+                <span>Category / Division</span>
+                <span class="label-opt">Optional</span>
               </label>
-              <input type="text" id="anglerDivisionInput" class="input-field" value="${escapeHtml(currentDiv)}" placeholder="Senior, Junior, Ladies..." required />
+              <input type="text" id="anglerDivisionInput" class="input-field" value="${escapeHtml(currentDiv)}" placeholder="Leave blank for undivided comp, or pick below..." />
               <div class="preset-chips">
                 ${DEFAULT_DIVISIONS.map(d => `<button type="button" class="preset-chip ${d === currentDiv ? 'selected' : ''}" data-pick-div="${escapeHtml(d)}">${escapeHtml(d)}</button>`).join('')}
               </div>
@@ -3218,9 +3191,21 @@
 
           sheet.querySelectorAll('[data-pick-div]').forEach(chip => {
             chip.addEventListener('click', () => {
-              divInput.value = chip.dataset.pickDiv;
+              const wasSelected = chip.classList.contains('selected');
               sheet.querySelectorAll('[data-pick-div]').forEach(c => c.classList.remove('selected'));
-              chip.classList.add('selected');
+              if (wasSelected) {
+                divInput.value = '';
+              } else {
+                divInput.value = chip.dataset.pickDiv;
+                chip.classList.add('selected');
+              }
+            });
+          });
+
+          divInput.addEventListener('input', () => {
+            const val = divInput.value.trim();
+            sheet.querySelectorAll('[data-pick-div]').forEach(c => {
+              c.classList.toggle('selected', c.dataset.pickDiv === val);
             });
           });
 
@@ -3230,7 +3215,7 @@
 
             const name = nameInput.value.trim();
             const badge = badgeInput.value.trim().replace(/^#/, '');
-            const division = divInput.value.trim() || 'Open';
+            const division = divInput.value.trim();
 
             if (!name) {
               errBox.textContent = 'Please enter the angler name.';
@@ -3275,7 +3260,7 @@
               saveStore();
               closeModal();
               renderApp();
-              showToast(`Registered ${name} (#${badge} · ${division})`);
+              showToast(`Registered ${name} (#${badge}${division ? ' · ' + division : ''})`);
               if (onCreatedCallback) onCreatedCallback(created);
             }
           });
@@ -3292,7 +3277,7 @@
 
         const anglerOptions = ds.anglers.map(a => `
           <option value="${a.id}" ${a.id === entry.anglerId ? 'selected' : ''}>
-            ${escapeHtml(a.name)} (#${escapeHtml(a.badge)} · ${escapeHtml(a.division || 'Open')})
+            ${escapeHtml(a.name)} (#${escapeHtml(a.badge)}${a.division ? ' · ' + escapeHtml(a.division) : ''})
           </option>
         `).join('');
 
@@ -3436,10 +3421,10 @@
             <div id="voidCatchError" class="error-msg"></div>
 
             <div class="drawer-rule-box" style="background:#FFF5F5; border-color:#FCA5A5;">
-              <div style="font-weight:800; color:#0F172A;">
+              <div style="font-weight:800; color:#00263E;">
                 ${escapeHtml(angler ? angler.name : 'Unknown')} ${angler ? `(Badge #${escapeHtml(angler.badge)})` : ''}
               </div>
-              <div class="tabular" style="margin-top:4px; color:#334155;">
+              <div class="tabular" style="margin-top:4px; color:#1D445B;">
                 ${formatLength(entry.lengthCm)} cm · ${formatWeight(entry.weightKg)} kg · ${escapeHtml(entry.species || 'Unlisted')} · ${escapeHtml(formatDateTime(entry.timestamp))}
               </div>
             </div>
@@ -3533,7 +3518,7 @@
               e.rank,
               e.angler.name,
               e.angler.badge,
-              e.angler.division || 'Open',
+              e.angler.division || '',
               e.primaryDisplay,
               e.unit,
               e.tieBreakerApplied ? 'YES' : 'NO',
@@ -3556,7 +3541,7 @@
             c.timestamp,
             ang ? ang.name : 'Unknown',
             ang ? ang.badge : '',
-            ang ? (ang.division || 'Open') : '',
+            ang ? (ang.division || '') : '',
             c.species || '',
             formatLength(c.lengthCm),
             formatWeight(c.weightKg),
@@ -3715,27 +3700,27 @@
       ========================================================= */
       const PWA_EXTRA_FILES = {
         'manifest.webmanifest': JSON.stringify({
-          name: 'TideLine — Fishing Competition Scorer',
-          short_name: 'TideLine',
-          description: 'Real-time mobile-first fishing competition scorer with automated 5-category leaderboards, tie-breakers, and transparent marshal audit log.',
+          name: 'Fishing Competition Scorer',
+          short_name: 'Fish Scorer',
+          description: 'Mobile-first fishing competition scorer with automated 5-category leaderboards, tie-breakers, and transparent marshal audit log.',
           start_url: './index.html',
           scope: './',
           display: 'standalone',
           orientation: 'portrait-primary',
-          background_color: '#0F172A',
-          theme_color: '#0F172A',
+          background_color: '#003B5C',
+          theme_color: '#003B5C',
           icons: [{ src: './icon.svg', sizes: 'any', type: 'image/svg+xml', purpose: 'any maskable' }]
         }, null, 2),
         'sw.js': [
-          "const CACHE_NAME = 'tideline-scorer-v1';",
+          "const CACHE_NAME = 'fishing-comp-scorer-v3';",
           "const ASSETS = ['./', './index.html', './manifest.webmanifest', './icon.svg'];",
           "self.addEventListener('install', e => { e.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll(ASSETS))); self.skipWaiting(); });",
           "self.addEventListener('activate', e => { e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== CACHE_NAME).map(k => caches.delete(k))))); self.clients.claim(); });",
           "self.addEventListener('fetch', e => { if (e.request.method !== 'GET') return; e.respondWith(caches.match(e.request).then(cached => cached || fetch(e.request).then(res => { if (res && res.status === 200 && res.type === 'basic') { const cp = res.clone(); caches.open(CACHE_NAME).then(c => c.put(e.request, cp)); } return res; }).catch(() => caches.match('./index.html')))); });"
         ].join('\n'),
-        'icon.svg': '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><rect width="512" height="512" rx="112" fill="#0F172A"/><rect x="40" y="40" width="432" height="432" rx="84" fill="#0369A1"/><g fill="none" stroke="#FFFFFF" stroke-width="28" stroke-linecap="round" stroke-linejoin="round" transform="translate(86 86) scale(14.16)"><path d="M6.5 12c.94-3.46 4.94-6 8.5-6 3.56 0 6.06 2.54 7 6-.94 3.47-3.44 6-7 6-3.56 0-7.56-2.53-8.5-6Z"/><path d="M18 12v.5"/><path d="M16 17.93a9.77 9.77 0 0 1 0-11.86"/><path d="M7 10.67C7 8 5.58 5.97 2.73 5.5c-1 1.5-1 5 .23 6.5-1.24 1.5-1.24 5-.23 6.5C5.58 18.03 7 16 7 13.33"/></g></svg>',
+        'icon.svg': "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 512 512\"><rect width=\"512\" height=\"512\" rx=\"96\" fill=\"#003B5C\"/><rect x=\"24\" y=\"24\" width=\"464\" height=\"464\" rx=\"76\" fill=\"#FFFFFF\"/><image href=\"data:image/jpeg;base64,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\" x=\"44\" y=\"44\" width=\"424\" height=\"424\"/></svg>",
         '.nojekyll': '',
-        'README.md': '# TideLine — Fishing Competition Scorer\n\nMobile-first, offline-ready PWA for real-time fishing competition logging, automated 5-category scoring with tie-breakers, and marshal audit verification.\n'
+        'README.md': '# Fishing Competition Scorer\n\nMobile-first, offline-ready PWA for real-time fishing competition logging, automated 5-category scoring with tie-breakers, and marshal audit verification.\n'
       };
 
       function buildCleanIndexHtml() {
@@ -3755,10 +3740,9 @@
         }
         const sampleBanner = clone.querySelector('#sampleBanner');
         if (sampleBanner) sampleBanner.style.display = 'none';
-        const sampleBtn = clone.querySelector('#sampleToggleBtn');
-        if (sampleBtn) {
-          sampleBtn.classList.remove('active');
-          sampleBtn.setAttribute('aria-checked', 'false');
+        const logoImg = clone.querySelector('#headerLogoImg');
+        if (logoImg) {
+          logoImg.setAttribute('src', store.customLogoDataUrl || DEFAULT_LOGO_DATA_URI);
         }
         const head = clone.querySelector('head');
         if (head && !head.querySelector('link[rel="manifest"]')) {
@@ -3885,8 +3869,8 @@
         const entries = [{ name: 'index.html', content: buildCleanIndexHtml() }];
         Object.keys(PWA_EXTRA_FILES).forEach(k => entries.push({ name: k, content: PWA_EXTRA_FILES[k] }));
         const zipBytes = createZipBytes(entries);
-        triggerBlobDownload(new Blob([zipBytes], { type: 'application/zip' }), 'tideline-fishing-scorer-pwa.zip');
-        showToast('Downloaded tideline-fishing-scorer-pwa.zip (6 PWA files)');
+        triggerBlobDownload(new Blob([zipBytes], { type: 'application/zip' }), 'fishing-competition-scorer-pwa.zip');
+        showToast('Downloaded fishing-competition-scorer-pwa.zip (6 PWA files)');
       }
 
       function downloadSingleHtml() {
@@ -3956,10 +3940,10 @@
             </button>
           </div>
           <div class="sheet-body">
-            <div class="drawer-rule-box" style="background:#E0F2FE; border-color:#7DD3FC; margin-bottom:14px;">
-              <div style="font-weight:800; color:#0C4A6E; margin-bottom:4px;">Download &amp; Publish App Files</div>
-              <div style="margin-bottom:10px; color:#0F172A;">
-                Save the complete PWA bundle directly to your computer to upload to GitHub Pages or Netlify Drop.
+            <div class="drawer-rule-box" style="background:#E2F4FC; border-color:#6BC4E8; margin-bottom:14px;">
+              <div style="font-weight:800; color:#003B5C; margin-bottom:4px;">Download &amp; Publish App Files</div>
+              <div style="margin-bottom:10px; color:#00263E;">
+                Save the updated Fishing Competition Scorer PWA bundle directly to your computer to upload to GitHub Pages or Netlify Drop.
               </div>
               <div style="display:flex; flex-direction:column; gap:8px;">
                 <button type="button" class="btn btn-primary btn-block" id="downloadPwaZipBtn">Download Full PWA Bundle (.zip)</button>
@@ -3978,8 +3962,22 @@
               </div>
             </div>
 
-            <div class="drawer-rule-box" style="margin-top:16px;">
-              <div style="font-weight:800; color:#0F172A; margin-bottom:4px;">Load Sample Competition Data</div>
+            <div class="drawer-rule-box" style="margin-top:12px;">
+              <div style="font-weight:800; color:#00263E; margin-bottom:4px;">Header Logo Image</div>
+              <div style="margin-bottom:10px;">
+                Displays the Fish Trophy logo by default. Optionally upload a custom club logo PNG/SVG to embed offline on this device.
+              </div>
+              <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                <label class="btn btn-secondary btn-sm" style="flex:1; cursor:pointer;">
+                  Upload Custom Logo
+                  <input type="file" id="customLogoFileInput" accept="image/*" style="display:none;" />
+                </label>
+                ${store.customLogoDataUrl ? '<button type="button" class="btn btn-secondary btn-sm" id="resetLogoBtn">Reset Default</button>' : ''}
+              </div>
+            </div>
+
+            <div class="drawer-rule-box" style="margin-top:12px;">
+              <div style="font-weight:800; color:#00263E; margin-bottom:4px;">Load Sample Competition Data</div>
               <div style="margin-bottom:10px;">
                 Test all 5 leaderboards, tie-breaker badges, edit history, and voided entries with realistic tournament data. Your live competition records stay safely preserved.
               </div>
@@ -3992,7 +3990,7 @@
             </div>
 
             <div class="drawer-rule-box" style="margin-top:12px;">
-              <div style="font-weight:800; color:#0F172A; margin-bottom:4px;">Offline Storage &amp; Backup</div>
+              <div style="font-weight:800; color:#00263E; margin-bottom:4px;">Offline Storage &amp; Backup</div>
               <div style="margin-bottom:10px;">
                 All anglers, catches, and audit trails are saved automatically to device storage (<span class="mono">localStorage</span>) for zero-reception reliability on the water.
               </div>
@@ -4025,6 +4023,34 @@
               showToast('Competition name updated');
             }
           });
+
+          const logoInput = sheet.querySelector('#customLogoFileInput');
+          if (logoInput) {
+            logoInput.addEventListener('change', e => {
+              const file = e.target.files && e.target.files[0];
+              if (!file) return;
+              const reader = new FileReader();
+              reader.onload = () => {
+                store.customLogoDataUrl = String(reader.result || '');
+                saveStore();
+                applyHeaderLogo();
+                closeModal();
+                showToast('Custom header logo saved offline');
+              };
+              reader.readAsDataURL(file);
+            });
+          }
+
+          const resetLogo = sheet.querySelector('#resetLogoBtn');
+          if (resetLogo) {
+            resetLogo.addEventListener('click', () => {
+              store.customLogoDataUrl = '';
+              saveStore();
+              applyHeaderLogo();
+              closeModal();
+              showToast('Restored default Fish Trophy logo');
+            });
+          }
 
           sheet.querySelector('#modalToggleSampleBtn').addEventListener('click', () => {
             toggleSampleMode();
@@ -4080,6 +4106,7 @@
       ========================================================= */
       function init() {
         loadStore();
+        applyHeaderLogo();
 
         document.querySelectorAll('.nav-tab').forEach(btn => {
           btn.addEventListener('click', () => {
@@ -4090,7 +4117,6 @@
         });
 
         document.getElementById('fabLogCatch').addEventListener('click', () => openLogCatchModal(null));
-        document.getElementById('sampleToggleBtn').addEventListener('click', toggleSampleMode);
         document.getElementById('exitSampleBtn').addEventListener('click', toggleSampleMode);
         document.getElementById('settingsBtn').addEventListener('click', openSettingsModal);
 
